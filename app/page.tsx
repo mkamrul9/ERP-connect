@@ -153,7 +153,7 @@ export default function HomePage() {
               borderRadius: '9px',
               opacity: attStatus.checkedIn ? 0.45 : 1,
               cursor: attStatus.checkedIn ? 'not-allowed' : 'pointer',
-              boxShadow: '0 2px 8px rgba(34, 197, 94, 0.25)',
+              boxShadow: '0 3px 10px rgba(16, 185, 129, 0.3)',
               transition: 'all .2s ease'
             }}
           >
@@ -175,7 +175,7 @@ export default function HomePage() {
               borderRadius: '9px',
               opacity: (!attStatus.checkedIn || attStatus.checkedOut) ? 0.45 : 1,
               cursor: (!attStatus.checkedIn || attStatus.checkedOut) ? 'not-allowed' : 'pointer',
-              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.25)',
+              boxShadow: '0 3px 10px rgba(244, 63, 94, 0.3)',
               transition: 'all .2s ease'
             }}
           >
@@ -184,19 +184,26 @@ export default function HomePage() {
         </div>
 
         {/* Welcome Header */}
-        <div style={{ textAlign: 'center', marginBottom: '32px', paddingTop: '8px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '36px', paddingTop: '8px' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 56, height: 56, borderRadius: '16px',
-            background: 'rgba(79,126,255,0.15)', marginBottom: 16
+            width: 60, height: 60, borderRadius: '18px',
+            background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(20,184,166,0.15))',
+            border: '1px solid rgba(99,102,241,0.25)',
+            marginBottom: 18,
+            boxShadow: '0 8px 24px rgba(99,102,241,0.2)',
           }}>
-            <Zap size={28} color="#4f7eff" />
+            <Zap size={28} color="#6366f1" />
           </div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text)', marginBottom: 8, margin: '0 0 8px' }}>
-            Welcome{user?.name ? `, ${user.name}` : ' to AlliedOne ERP'}
+          <h1 style={{
+            fontSize: '1.9rem', fontWeight: 800, color: 'var(--text)',
+            marginBottom: 8, margin: '0 0 10px',
+            letterSpacing: '-0.03em',
+          }}>
+            {user?.name ? `Welcome back, ${user.name.split(' ')[0]}` : 'Welcome to ERP-connect'}
           </h1>
-          <p style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
-            Select a module below to navigate
+          <p style={{ fontSize: '0.88rem', color: 'var(--muted)', lineHeight: 1.6 }}>
+            Your enterprise platform — select a module to get started
           </p>
         </div>
 
@@ -204,54 +211,71 @@ export default function HomePage() {
         {/* Module Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
           gap: '14px',
         }}>
           {modules.map(({ href, icon: Icon, title, desc, color }) => (
             <Link key={href} href={href} style={{ textDecoration: 'none' }}>
               <div
-                className="card"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '16px',
                   padding: '20px',
                   cursor: 'pointer',
-                  transition: 'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease',
-                  border: `1px solid ${color}33`,
-                  background: `linear-gradient(135deg, ${color}0d 0%, var(--card) 60%)`,
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
+                  borderRadius: '14px',
+                  border: `1px solid ${color}2a`,
+                  background: `linear-gradient(135deg, ${color}0f 0%, var(--card) 55%)`,
                   marginBottom: 0,
+                  position: 'relative',
+                  overflow: 'hidden',
                 }}
                 onMouseEnter={e => {
                   const el = e.currentTarget as HTMLDivElement;
-                  el.style.transform = 'translateY(-3px)';
-                  el.style.boxShadow = `0 8px 24px ${color}30`;
-                  el.style.borderColor = `${color}77`;
+                  el.style.transform = 'translateY(-4px)';
+                  el.style.boxShadow = `0 12px 32px ${color}28`;
+                  el.style.borderColor = `${color}60`;
                 }}
                 onMouseLeave={e => {
                   const el = e.currentTarget as HTMLDivElement;
                   el.style.transform = 'translateY(0)';
                   el.style.boxShadow = 'none';
-                  el.style.borderColor = `${color}33`;
+                  el.style.borderColor = `${color}2a`;
                 }}
               >
+                {/* Color accent bar */}
                 <div style={{
-                  background: `${color}22`,
+                  position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
+                  background: `linear-gradient(90deg, ${color}, transparent)`,
+                  borderRadius: '14px 14px 0 0',
+                }} />
+                <div style={{
+                  background: `${color}20`,
                   color: color,
-                  padding: '14px',
-                  borderRadius: '10px',
+                  padding: '13px',
+                  borderRadius: '12px',
                   flexShrink: 0,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  border: `1px solid ${color}30`,
                 }}>
                   <Icon size={22} />
                 </div>
-                <div>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{
+                    fontSize: '0.94rem', fontWeight: 700, color: 'var(--text)',
+                    marginBottom: 4, letterSpacing: '-0.01em'
+                  }}>
                     {title}
                   </div>
-                  <div style={{ fontSize: '0.76rem', color: 'var(--muted)', lineHeight: 1.4 }}>
+                  <div style={{
+                    fontSize: '0.75rem', color: 'var(--muted)',
+                    lineHeight: 1.45, overflow: 'hidden',
+                    display: '-webkit-box', WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical' as const,
+                  }}>
                     {desc}
                   </div>
                 </div>

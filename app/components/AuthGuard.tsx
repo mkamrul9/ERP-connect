@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { useAuth } from "../context/AuthContext";
@@ -38,10 +38,24 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   // While auth state is loading from cookies, show spinner � never redirect
   if (loading) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "var(--bg)", color: "var(--muted)" }}>
+      <div style={{
+        display: "flex", justifyContent: "center", alignItems: "center",
+        height: "100vh", background: "var(--bg)", color: "var(--muted)"
+      }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: 8, color: "var(--primary)" }}>AlliedOne</div>
-          <div style={{ fontSize: "0.85rem" }}>Loading ERP System...</div>
+          <div style={{
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            width: 52, height: 52, borderRadius: 14,
+            background: "linear-gradient(135deg, #6366f1, #14b8a6)",
+            marginBottom: 16,
+            boxShadow: "0 8px 24px rgba(99,102,241,0.4)"
+          }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div style={{ fontSize: "1.3rem", fontWeight: 800, marginBottom: 8, color: "var(--text)", letterSpacing: "-0.02em" }}>ERP-connect</div>
+          <div style={{ fontSize: "0.82rem", color: "var(--muted)" }}>Loading platform...</div>
         </div>
       </div>
     );

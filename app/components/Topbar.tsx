@@ -4,13 +4,15 @@
  * Renders the top header for mobile and desktop views.
  * Displays the dynamic page title based on the active route and supports
  * passing child elements (e.g. Action Buttons) into the header area.
+ * Includes a dark/light theme toggle.
  */
 'use client';
-import { Menu, Bell } from 'lucide-react';
+import { Menu, Bell, Sun, Moon } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
 
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import Cookies from 'js-cookie';
 import { useCallback } from 'react';
 
@@ -18,6 +20,7 @@ export default function Topbar({ title, children }: { title?: string, children?:
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   let defaultTitle = 'Home';
   if (pathname === '/') defaultTitle = 'Home';
   if (pathname === '/dashboard') defaultTitle = 'Daily Tasks';
@@ -163,8 +166,19 @@ export default function Topbar({ title, children }: { title?: string, children?:
           <span className="top-title">{displayTitle}</span>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           {children}
+
+          {/* Theme Toggle */}
+          <button
+            className="btn btn-sec"
+            onClick={toggleTheme}
+            style={{ padding: '8px', borderRadius: '8px' }}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
           
           <div style={{ position: 'relative' }} ref={dropdownRef}>
             <button ref={bellRef} className="btn btn-sec" style={{ position: 'relative', padding: '8px' }} onClick={openDropdown}>

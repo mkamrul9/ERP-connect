@@ -2,13 +2,13 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'AlliedOne ERP System',
-    short_name: 'AOL ERP',
-    description: 'Internal ERP for AlliedOne',
+    name: 'ERP-connect',
+    short_name: 'ERP-connect',
+    description: 'ERP-connect — Modern Enterprise Resource Planning Platform',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0d0f18',
-    theme_color: '#0d0f18',
+    background_color: '#0b0f1a',
+    theme_color: '#6366f1',
     icons: [
       {
         src: '/icon-192x192.png',
