@@ -3,7 +3,7 @@
  * 
  * - Uses native fetch to call Brevo v3 SMTP API (zero external npm dependencies)
  * - Sends AOL_ERP branded emails from dint837@gmail.com
- * - Recipient routing for Ahsan Kabir, Orko, and Tajimur Rafi + dynamic members
+ * - Recipient routing for Jane Doe, Orko, and John Smith + dynamic members
  * - Manages reminder scheduling for 24 hours & 15 hours prior to events
  */
 
@@ -15,18 +15,18 @@ export const DEFAULT_SENDER_NAME = 'AOL_ERP';
 
 // Predefined notification email mapping as requested by user
 export const NOTIFICATION_EMAIL_MAP: Record<string, string> = {
-  'ahsan': 'ahsankabir13@gmail.com',
-  'kabir': 'ahsankabir13@gmail.com',
-  'ahsankabir': 'ahsankabir13@gmail.com',
-  'admin': 'ahsankabir13@gmail.com',
-  'orko': 'orko552@gmail.com',
-  'tajimur': 'tajimurrafi@gmail.com',
-  'tajimurrafi': 'tajimurrafi@gmail.com',
+  'jane': 'jane@example.com',
+  'doe': 'jane@example.com',
+  'janedoe': 'jane@example.com',
+  'admin': 'jane@example.com',
+  'orko': 'alex@example.com',
+  'john': 'john@example.com',
+  'johnsmith': 'john@example.com',
   'kamrul': 'kamrulmdislam19@gmail.com',
   'islam': 'kamrulmdislam19@gmail.com'
 };
 
-export const ADMIN_NOTIFICATION_EMAIL = 'ahsankabir13@gmail.com';
+export const ADMIN_NOTIFICATION_EMAIL = 'jane@example.com';
 
 /**
  * Resolves notification email addresses for a member
@@ -57,7 +57,7 @@ export async function resolveMemberNotificationEmails(memberIdOrName?: number | 
           emails.add(email);
         }
       }
-      if (member.email && member.email.includes('@') && !member.email.endsWith('@alliedone.com')) {
+      if (member.email && member.email.includes('@') && !member.email.endsWith('@erp-connect.com')) {
         emails.add(member.email.trim());
       }
     } else if (typeof memberIdOrName === 'string') {
@@ -192,7 +192,7 @@ export function buildAolErpHtml(title: string, rows: Array<{ label: string; valu
           <!-- Footer -->
           <tr>
             <td style="padding: 16px 20px; background-color: #0d1017; border-top: 1px solid #2a3050; text-align: center; color: #64748b; font-size: 12px;">
-              AlliedOne ERP Notification System • Sent via Brevo Transactional Service
+              ERP-connect ERP Notification System • Sent via Brevo Transactional Service
             </td>
           </tr>
         </table>

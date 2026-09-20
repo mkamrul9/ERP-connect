@@ -5,6 +5,7 @@
  */
 'use client';
 
+import Pagination from '../components/Pagination';
 import { useState, useEffect, useCallback } from 'react';
 import { Briefcase, Trash2, Pencil, X, Plus, DownloadCloud } from 'lucide-react';
 import Topbar from '../components/Topbar';
@@ -70,10 +71,10 @@ const WHITE = '#ffffff';
 const MUTED_LABEL = 'rgba(255,255,255,0.55)';
 
 const fieldInputSt: React.CSSProperties = {
-  background: '#131722',
-  border: '1px solid #2a3050',
+  background: 'var(--card)',
+  border: '1px solid var(--border)',
   borderRadius: 7,
-  color: WHITE,
+  color: 'var(--text)',
   fontSize: '0.78rem',
   padding: '6px 9px',
   width: '100%',
@@ -83,12 +84,12 @@ const fieldInputSt: React.CSSProperties = {
 
 const fieldEditSt: React.CSSProperties = {
   ...fieldInputSt,
-  border: '1px solid #3a4568',
+  border: '1px solid var(--border)',
 };
 
 const labelSt: React.CSSProperties = {
   fontSize: '0.62rem',
-  color: MUTED_LABEL,
+  color: 'var(--muted)',
   textTransform: 'uppercase',
   marginBottom: 2,
   fontWeight: 600,
@@ -96,7 +97,7 @@ const labelSt: React.CSSProperties = {
 };
 
 const valueSt: React.CSSProperties = {
-  color: WHITE,
+  color: 'var(--text)',
   fontWeight: 500,
   fontSize: '0.82rem',
   lineHeight: 1.25,
@@ -213,8 +214,8 @@ function CompactTenderCard({ tender, onClick }: { tender: Tender; onClick: () =>
         display: 'flex',
         alignItems: 'center',
         gap: 12,
-        background: '#161926',
-        border: '1px solid #2a3050',
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
         borderRadius: 12,
         padding: '13px 16px',
         marginBottom: 10,
@@ -223,12 +224,12 @@ function CompactTenderCard({ tender, onClick }: { tender: Tender; onClick: () =>
         userSelect: 'none',
       }}
       onMouseOver={e => {
-        e.currentTarget.style.borderColor = '#4f7eff';
-        e.currentTarget.style.background = 'rgba(79,126,255,0.04)';
+        e.currentTarget.style.borderColor = 'var(--primary)';
+        e.currentTarget.style.background = 'var(--primary-dim)';
       }}
       onMouseOut={e => {
-        e.currentTarget.style.borderColor = '#2a3050';
-        e.currentTarget.style.background = '#161926';
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.background = 'var(--card)';
       }}
     >
       <div
@@ -239,7 +240,7 @@ function CompactTenderCard({ tender, onClick }: { tender: Tender; onClick: () =>
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.92rem',
-          color: WHITE,
+          color: 'var(--text)',
           fontWeight: 600,
         }}
       >
@@ -252,14 +253,14 @@ function CompactTenderCard({ tender, onClick }: { tender: Tender; onClick: () =>
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.82rem',
-          color: WHITE,
+          color: 'var(--text)',
           flexShrink: 1,
           marginLeft: 'auto',
         }}
       >
         {tender.organization || '—'}
       </div>
-      <div style={{ fontSize: '0.82rem', color: WHITE, whiteSpace: 'nowrap', fontWeight: 600, flexShrink: 0, marginLeft: 40 }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text)', whiteSpace: 'nowrap', fontWeight: 600, flexShrink: 0, marginLeft: 40 }}>
         {getCountdownShort(tender.submission_deadline)}
       </div>
     </div>
@@ -292,12 +293,12 @@ function ReminderBoxes({
       ) : (
         <div
           style={{
-            background: '#131722',
-            border: '1px solid #2a3050',
+            background: 'var(--card)',
+            border: '1px solid var(--border)',
             borderRadius: 7,
             padding: '5px 6px',
             textAlign: 'center',
-            color: WHITE,
+            color: 'var(--text)',
             fontWeight: 600,
             fontSize: '0.8rem',
           }}
@@ -375,7 +376,7 @@ function TenderFields({
         <div>
           <Label>Published Date</Label>
           {editMode ? (
-            <input type="date" value={form.published_date} onChange={e => onChange('published_date', e.target.value)} style={{ ...fieldEditSt, colorScheme: 'dark' }} />
+            <input type="date" value={form.published_date} onChange={e => onChange('published_date', e.target.value)} style={{ ...fieldEditSt,  }} />
           ) : (
             <div style={valueSt}>{fmtDate(v?.published_date)}</div>
           )}
@@ -392,7 +393,7 @@ function TenderFields({
                 } catch {}
               }}
               onChange={e => onChange('submission_deadline', e.target.value)}
-              style={{ ...fieldEditSt, colorScheme: 'dark' }}
+              style={{ ...fieldEditSt,  }}
             />
           ) : (
             <div style={valueSt}>{v?.submission_deadline ? fmtDeadline(v.submission_deadline) : '—'}</div>
@@ -427,7 +428,7 @@ function TenderFields({
         {editMode ? (
           <input type="url" value={form.documents_url} onChange={e => onChange('documents_url', e.target.value)} style={fieldEditSt} placeholder="https://..." />
         ) : v?.documents_url ? (
-          <a href={v.documents_url} target="_blank" rel="noreferrer" style={{ color: WHITE, fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: 5, wordBreak: 'break-all', textDecoration: 'underline' }}>
+          <a href={v.documents_url} target="_blank" rel="noreferrer" style={{ color: 'var(--text)', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: 5, wordBreak: 'break-all', textDecoration: 'underline' }}>
             <DownloadCloud size={12} /> Open documents
           </a>
         ) : (
@@ -453,6 +454,7 @@ function TenderFields({
 
 export default function TendersPage() {
   const [tenders, setTenders] = useState<Tender[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
 
@@ -606,12 +608,12 @@ export default function TendersPage() {
             left: '50%',
             transform: 'translateX(-50%)',
             background: '#1d2133',
-            border: '1px solid #2a3050',
+            border: '1px solid var(--border)',
             borderRadius: 10,
             padding: '10px 20px',
             fontSize: '.84rem',
             zIndex: 99999,
-            color: WHITE,
+            color: 'var(--text)',
             whiteSpace: 'nowrap',
             boxShadow: '0 4px 20px rgba(0,0,0,.4)',
           }}
@@ -629,18 +631,19 @@ export default function TendersPage() {
         }}
       >
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 48, color: WHITE, fontSize: '0.85rem', opacity: 0.6 }}>Loading...</div>
+          <div style={{ textAlign: 'center', padding: 48, color: 'var(--text)', fontSize: '0.85rem', opacity: 0.6 }}>Loading...</div>
         ) : tenders.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 48, color: WHITE, fontSize: '0.85rem', opacity: 0.6 }}>
+          <div style={{ textAlign: 'center', padding: 48, color: 'var(--text)', fontSize: '0.85rem', opacity: 0.6 }}>
             <Briefcase size={28} style={{ opacity: 0.3, display: 'block', margin: '0 auto 10px' }} />
             No tenders yet. Tap + to add one.
           </div>
         ) : (
-          tenders.map(t => <CompactTenderCard key={t.id} tender={t} onClick={() => openDetail(t)} />)
+          tenders.slice((currentPage - 1) * 10, currentPage * 10).map(t => <CompactTenderCard key={t.id} tender={t} onClick={() => openDetail(t)} />)
         )}
       </div>
 
       {/* FAB */}
+      <Pagination currentPage={currentPage} totalItems={tenders.length} itemsPerPage={10} onPageChange={setCurrentPage} />
       <button
         onClick={() => {
           setAddForm(BLANK);
@@ -656,7 +659,7 @@ export default function TendersPage() {
           borderRadius: '50%',
           background: BLUE_GRAD,
           border: 'none',
-          color: WHITE,
+          color: 'var(--text)',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -685,7 +688,7 @@ export default function TendersPage() {
         >
           <div
             style={{
-              background: '#161926',
+              background: 'var(--card)',
               borderTop: '1px solid #2a3050',
               borderTopLeftRadius: 18,
               borderTopRightRadius: 18,
@@ -712,13 +715,13 @@ export default function TendersPage() {
                   '#ef4444',
                   'rgba(239,68,68,0.12)'
                 )}
-              {iconBtn(closeDetail, <X size={16} />, '#94a3b8', 'rgba(255,255,255,0.08)')}
+              {iconBtn(closeDetail, <X size={16} />, 'var(--muted)', 'rgba(255,255,255,0.08)')}
             </div>
 
             <div
               style={{
                 fontSize: '0.68rem',
-                color: WHITE,
+                color: 'var(--text)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: 10,
@@ -751,9 +754,9 @@ export default function TendersPage() {
                   style={{
                     padding: '10px',
                     borderRadius: 9,
-                    border: '1px solid #2a3050',
-                    background: '#131722',
-                    color: WHITE,
+                    border: '1px solid var(--border)',
+                    background: 'var(--card)',
+                    color: 'var(--text)',
                     fontSize: '0.84rem',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -771,7 +774,7 @@ export default function TendersPage() {
                     borderRadius: 9,
                     border: 'none',
                     background: BLUE_GRAD,
-                    color: WHITE,
+                    color: 'var(--text)',
                     fontSize: '0.84rem',
                     fontWeight: 700,
                     cursor: 'pointer',
@@ -805,9 +808,9 @@ export default function TendersPage() {
           <div
             style={{
               position: 'relative',
-              background: '#161926',
+              background: 'var(--card)',
               borderRadius: '18px 18px 0 0',
-              border: '1px solid #2a3050',
+              border: '1px solid var(--border)',
               borderBottom: 'none',
               padding: '12px 16px 16px',
               paddingBottom: 'max(14px, env(safe-area-inset-bottom))',
@@ -817,10 +820,10 @@ export default function TendersPage() {
               overflow: 'hidden',
             }}
           >
-            <div style={{ width: 36, height: 3, background: '#2a3050', borderRadius: 2, margin: '0 auto 10px' }} />
+            <div style={{ width: 36, height: 3, background: 'var(--border)', borderRadius: 2, margin: '0 auto 10px' }} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: WHITE, margin: 0 }}>Add Tender</h3>
-              <button onClick={() => setShowAdd(false)} style={{ background: 'none', border: 'none', color: WHITE, cursor: 'pointer', padding: 4, opacity: 0.7 }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>Add Tender</h3>
+              <button onClick={() => setShowAdd(false)} style={{ background: 'none', border: 'none', color: 'var(--text)', cursor: 'pointer', padding: 4, opacity: 0.7 }}>
                 <X size={18} />
               </button>
             </div>
@@ -838,7 +841,7 @@ export default function TendersPage() {
                 borderRadius: 9,
                 border: 'none',
                 background: BLUE_GRAD,
-                color: WHITE,
+                color: 'var(--text)',
                 fontSize: '0.9rem',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -873,17 +876,17 @@ export default function TendersPage() {
         >
           <div
             style={{
-              background: '#161926',
-              border: '1px solid #2a3050',
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
               borderRadius: 16,
               width: '100%',
               maxWidth: 340,
               padding: 22,
             }}
           >
-            <h3 style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, marginBottom: 8, color: WHITE }}>Delete Tender?</h3>
-            <p style={{ textAlign: 'center', fontSize: '.88rem', fontWeight: 600, color: WHITE, marginBottom: 4 }}>{deleteTarget.title}</p>
-            <p style={{ textAlign: 'center', fontSize: '.76rem', color: WHITE, opacity: 0.6, marginBottom: 20 }}>{deleteTarget.organization || ''}</p>
+            <h3 style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, marginBottom: 8, color: 'var(--text)' }}>Delete Tender?</h3>
+            <p style={{ textAlign: 'center', fontSize: '.88rem', fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>{deleteTarget.title}</p>
+            <p style={{ textAlign: 'center', fontSize: '.76rem', color: 'var(--text)', opacity: 0.6, marginBottom: 20 }}>{deleteTarget.organization || ''}</p>
             <div style={{ display: 'flex', gap: 10 }}>
               <button
                 onClick={() => setDeleteTarget(null)}
@@ -891,9 +894,9 @@ export default function TendersPage() {
                   flex: 1,
                   padding: '11px',
                   borderRadius: 10,
-                  border: '1px solid #2a3050',
-                  background: '#131722',
-                  color: WHITE,
+                  border: '1px solid var(--border)',
+                  background: 'var(--card)',
+                  color: 'var(--text)',
                   fontSize: '.88rem',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -910,7 +913,7 @@ export default function TendersPage() {
                   borderRadius: 10,
                   border: 'none',
                   background: BLUE_GRAD,
-                  color: WHITE,
+                  color: 'var(--text)',
                   fontSize: '.88rem',
                   fontWeight: 700,
                   cursor: 'pointer',

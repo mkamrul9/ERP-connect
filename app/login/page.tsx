@@ -56,7 +56,7 @@ export default function LoginPage() {
         <div style={{
           position: "absolute", width: 600, height: 600,
           borderRadius: "50%", top: "-200px", left: "-200px",
-          background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(37, 99, 235,0.15) 0%, transparent 70%)",
         }} />
         <div style={{
           position: "absolute", width: 500, height: 500,
@@ -66,7 +66,7 @@ export default function LoginPage() {
         <div style={{
           position: "absolute", width: 300, height: 300,
           borderRadius: "50%", top: "50%", left: "60%",
-          background: "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(37, 99, 235,0.08) 0%, transparent 70%)",
         }} />
       </div>
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
         flex: 1, display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
         padding: "60px",
-        background: "linear-gradient(145deg, rgba(99,102,241,0.1) 0%, rgba(20,184,166,0.06) 100%)",
+        background: "linear-gradient(145deg, rgba(37, 99, 235,0.1) 0%, rgba(20,184,166,0.06) 100%)",
         borderRight: "1px solid var(--border)",
         position: "relative",
       }} className="login-left-panel">
@@ -89,15 +89,15 @@ export default function LoginPage() {
           <div style={{
             display: "inline-flex", alignItems: "center", justifyContent: "center",
             width: 72, height: 72, borderRadius: 20,
-            background: "linear-gradient(135deg, #6366f1, #14b8a6)",
+            background: "linear-gradient(135deg, #2563eb, #14b8a6)",
             marginBottom: 28,
-            boxShadow: "0 12px 36px rgba(99,102,241,0.45)",
+            boxShadow: "0 12px 36px rgba(37, 99, 235,0.45)",
           }}>
             <Zap color="#fff" size={34} strokeWidth={2.5} />
           </div>
           <h1 style={{
             fontSize: "2.4rem", fontWeight: 800,
-            background: "linear-gradient(135deg, #e2e8f8, #6366f1)",
+            background: "linear-gradient(135deg, #e2e8f8, #2563eb)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             letterSpacing: "-0.03em", marginBottom: 12,
           }}>
@@ -110,13 +110,13 @@ export default function LoginPage() {
           {/* Feature pills */}
           {[
             { icon: "📊", label: "Real-time Analytics" },
-            { icon: "👥", label: "HR & Attendance" },
-            { icon: "💼", label: "Tender Management" },
+            { icon: "", label: "HR & Attendance" },
+            { icon: "", label: "Tender Management" },
             { icon: "🔒", label: "Secure & Auditable" },
           ].map(f => (
             <div key={f.label} style={{
               display: "inline-flex", alignItems: "center", gap: 8,
-              background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)",
+              background: "rgba(37, 99, 235,0.1)", border: "1px solid rgba(37, 99, 235,0.2)",
               borderRadius: 20, padding: "6px 14px",
               fontSize: "0.8rem", fontWeight: 600, color: "var(--text-sec)",
               margin: "4px",
@@ -148,9 +148,9 @@ export default function LoginPage() {
             <div style={{
               display: "inline-flex", alignItems: "center", justifyContent: "center",
               width: 56, height: 56, borderRadius: 14,
-              background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+              background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
               marginBottom: 18,
-              boxShadow: "0 8px 24px rgba(99,102,241,0.45)",
+              boxShadow: "0 8px 24px rgba(37, 99, 235,0.45)",
             }}>
               <ShieldCheck size={28} color="#fff" />
             </div>
@@ -177,7 +177,7 @@ export default function LoginPage() {
               marginBottom: 22,
               display: "flex", alignItems: "center", gap: 8,
             }}>
-              ⚠️ {error}
+               {error}
             </div>
           )}
 
@@ -269,7 +269,7 @@ export default function LoginPage() {
                 width: "100%",
                 background: loading
                   ? "var(--border)"
-                  : "linear-gradient(135deg, #6366f1, #4f46e5)",
+                  : "linear-gradient(135deg, #2563eb, #1d4ed8)",
                 color: loading ? "var(--muted)" : "#fff",
                 border: "none",
                 padding: "14px",
@@ -279,19 +279,19 @@ export default function LoginPage() {
                 cursor: loading ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 transition: "all 0.2s ease",
-                boxShadow: loading ? "none" : "0 4px 16px rgba(99,102,241,0.45)",
+                boxShadow: loading ? "none" : "0 4px 16px rgba(37, 99, 235,0.45)",
                 letterSpacing: "0.01em",
                 fontFamily: "inherit",
               }}
               onMouseEnter={e => {
                 if (!loading) {
                   (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 8px 24px rgba(99,102,241,0.55)";
+                  (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 8px 24px rgba(37, 99, 235,0.55)";
                 }
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = loading ? "none" : "0 4px 16px rgba(99,102,241,0.45)";
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = loading ? "none" : "0 4px 16px rgba(37, 99, 235,0.45)";
               }}
             >
               {loading ? (

@@ -211,7 +211,7 @@ export default function Topbar({ title, children }: { title?: string, children?:
                           style={{
                             padding: '12px 16px',
                             borderBottom: '1px solid var(--border)',
-                            background: isUnread ? 'rgba(79,126,255,0.08)' : 'transparent',
+                            background: isUnread ? 'rgba(37,99,235,0.08)' : 'transparent',
                             display: 'flex',
                             gap: '12px',
                             alignItems: 'flex-start',
@@ -219,7 +219,7 @@ export default function Topbar({ title, children }: { title?: string, children?:
                             transition: 'background 0.15s ease'
                           }}
                           onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}
-                          onMouseLeave={e => (e.currentTarget.style.background = isUnread ? 'rgba(79,126,255,0.08)' : 'transparent')}
+                          onMouseLeave={e => (e.currentTarget.style.background = isUnread ? 'rgba(37,99,235,0.08)' : 'transparent')}
                         >
                           {isUnread ? (
                             <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', flexShrink: 0, marginTop: '6px' }} />

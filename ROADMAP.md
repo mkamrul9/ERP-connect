@@ -1,4 +1,4 @@
-# AlliedOne ERP — Complete Product Roadmap
+# ERP-connect ERP — Complete Product Roadmap
 > **Purpose:** This is the authoritative brain document. Every AI agent, developer, or stakeholder should read this file before implementing any feature. Each phase must be fully completed and verified before moving to the next.
 
 ---
@@ -290,7 +290,7 @@ This is where the system gets truly intelligent. All previous phases collected s
 **Duration:** Week 10-12
 
 ### 9.1 Initialize Expo App
-- [ ] `npx create-expo-app alliedone-mobile`
+- [ ] `npx create-expo-app erp-connect-mobile`
 - [ ] Share API with the web dashboard (same backend)
 - [ ] Bottom navigation: Dashboard | HR | Accounts | Tenders | Roadmap
 

@@ -1,4 +1,4 @@
-import { resolveMemberNotificationEmails } from './src/brevo.js';
+import { resolveMemberNotificationEmails } from '../src/brevo.js';
 
 async function test() {
   const emails = await resolveMemberNotificationEmails('Kamrul Islam');

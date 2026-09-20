@@ -186,6 +186,46 @@ export async function initDB() {
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
       );
 
+      
+      CREATE TABLE IF NOT EXISTS automations (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        trigger_event TEXT NOT NULL,
+        action_type TEXT NOT NULL,
+        action_payload TEXT,
+        is_active INTEGER DEFAULT 1,
+        created_by INTEGER REFERENCES members(id) ON DELETE SET NULL,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+      );
+      
+      CREATE TABLE IF NOT EXISTS automation_logs (
+        id SERIAL PRIMARY KEY,
+        automation_id INTEGER REFERENCES automations(id) ON DELETE CASCADE,
+        triggered_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        status TEXT DEFAULT 'SUCCESS',
+        details TEXT
+      );
+
+      
+      CREATE TABLE IF NOT EXISTS automations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        trigger_event TEXT NOT NULL,
+        action_type TEXT NOT NULL,
+        action_payload TEXT,
+        is_active INTEGER DEFAULT 1,
+        created_by INTEGER REFERENCES members(id) ON DELETE SET NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS automation_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        automation_id INTEGER REFERENCES automations(id) ON DELETE CASCADE,
+        triggered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        status TEXT DEFAULT 'SUCCESS',
+        details TEXT
+      );
+
       CREATE TABLE IF NOT EXISTS email_jobs (
         id SERIAL PRIMARY KEY,
         entity_type TEXT NOT NULL,
@@ -420,11 +460,11 @@ export async function initDB() {
   const employeeHash = await bcrypt.hash('Employee@123', 10);
 
   const defaultAccounts = [
-    { name: 'Ahsan Kabir Admin', email: 'admin@alliedone.com', role: 'Admin', color: '#ff4d4f', hash: adminHash, notify_email: 'ahsankabir13@gmail.com' },
-    { name: 'Ahsan Kabir', email: 'ahsankabir@alliedone.com', role: 'Employee', color: '#ff7a45', hash: employeeHash, notify_email: 'ahsankabir13@gmail.com' },
-    { name: 'Tajimur Rafi', email: 'rafi@alliedone.com', role: 'Employee', color: '#4f7eff', hash: employeeHash, notify_email: 'tajimurrafi@gmail.com' },
-    { name: 'Arijit Orko', email: 'orko@alliedone.com', role: 'Employee', color: '#26c486', hash: employeeHash, notify_email: 'orko552@gmail.com' },
-    { name: 'Kamrul Islam', email: 'kamrul@alliedone.com', role: 'Employee', color: '#f5a623', hash: employeeHash, notify_email: '' },
+    { name: 'Jane Doe Admin', email: 'admin@erp-connect.com', role: 'Admin', color: '#ff4d4f', hash: adminHash, notify_email: 'jane@example.com' },
+    { name: 'Jane Doe', email: 'janedoe@erp-connect.com', role: 'Employee', color: '#ff7a45', hash: employeeHash, notify_email: 'jane@example.com' },
+    { name: 'John Smith', email: 'smith@erp-connect.com', role: 'Employee', color: '#4f7eff', hash: employeeHash, notify_email: 'john@example.com' },
+    { name: 'Alex Johnson', email: 'orko@erp-connect.com', role: 'Employee', color: '#26c486', hash: employeeHash, notify_email: 'alex@example.com' },
+    { name: 'Sam Wilson', email: 'kamrul@erp-connect.com', role: 'Employee', color: '#f5a623', hash: employeeHash, notify_email: '' },
   ];
 
   for (const acc of defaultAccounts) {
@@ -442,10 +482,10 @@ export async function initDB() {
     }
   }
 
-  // Ensure admin@ stays Admin labeled distinctly from employee Ahsan Kabir
+  // Ensure admin@ stays Admin labeled distinctly from employee Jane Doe
   try {
-    await dbRun(`UPDATE members SET role = 'Admin', name = 'Ahsan Kabir Admin' WHERE LOWER(TRIM(email)) = 'admin@alliedone.com'`);
-    await dbRun(`UPDATE members SET role = 'Employee', name = 'Ahsan Kabir' WHERE LOWER(TRIM(email)) = 'ahsankabir@alliedone.com'`);
+    await dbRun(`UPDATE members SET role = 'Admin', name = 'Jane Doe Admin' WHERE LOWER(TRIM(email)) = 'admin@erp-connect.com'`);
+    await dbRun(`UPDATE members SET role = 'Employee', name = 'Jane Doe' WHERE LOWER(TRIM(email)) = 'janedoe@erp-connect.com'`);
   } catch (e) {}
 
   // Seed default settings if missing
@@ -455,7 +495,7 @@ export async function initDB() {
     await dbRun('INSERT INTO settings (key, value) VALUES (?, ?)', ['office_wifi_ip', '127.0.0.1,::1']);
   }
   if (!existingSettingsKeys.has('office_wifi_name')) {
-    await dbRun('INSERT INTO settings (key, value) VALUES (?, ?)', ['office_wifi_name', 'AlliedOne Office Wi-Fi']);
+    await dbRun('INSERT INTO settings (key, value) VALUES (?, ?)', ['office_wifi_name', 'ERP-connect Office Wi-Fi']);
   }
   if (!existingSettingsKeys.has('wifi_auto_attendance_enabled')) {
     await dbRun('INSERT INTO settings (key, value) VALUES (?, ?)', ['wifi_auto_attendance_enabled', 'true']);

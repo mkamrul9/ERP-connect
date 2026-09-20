@@ -13,7 +13,7 @@ export async function GET() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#0d0f18',
-          color: '#ffffff',
+          color: 'var(--text)',
           fontSize: 90,
           fontWeight: 'bold',
           borderRadius: 24,

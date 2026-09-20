@@ -11,6 +11,7 @@
  */
 'use client';
 
+import Pagination from '../components/Pagination';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { LogIn, LogOut, Plus, ChevronLeft, ChevronRight, X, Calendar, Download, BarChart2, Wifi, Laptop, Image as ImageIcon, Terminal, Copy, Check, ShieldCheck, Zap, Bell, BellOff } from 'lucide-react';
 import Topbar from '../components/Topbar';
@@ -19,9 +20,9 @@ import html2canvas from 'html2canvas';
 
 const WHITE = '#ffffff';
 const MUTED_LABEL = 'rgba(255,255,255,0.55)';
-const BLUE = '#4f7eff';
-const BLUE_BG = 'rgba(79,126,255,0.15)';
-const BLUE_GRAD = 'linear-gradient(135deg, #4f7eff, #6c4fe3)';
+const BLUE = 'var(--primary)';
+const BLUE_BG = 'rgba(37,99,235,0.15)';
+const BLUE_GRAD = 'linear-gradient(135deg, var(--primary), #6c4fe3)';
 const GREEN = '#26c486';
 const GREEN_BG = 'rgba(38,196,134,0.15)';
 const RED = '#ef4444';
@@ -38,27 +39,27 @@ const LEAVE_REASONS = [
 ] as const;
 
 const leaveFieldInputSt: React.CSSProperties = {
-  background: '#131722',
-  border: '1px solid #2a3050',
+  background: 'var(--card)',
+  border: '1px solid var(--border)',
   borderRadius: 7,
-  color: WHITE,
+  color: 'var(--text)',
   fontSize: '0.78rem',
   padding: '6px 9px',
   width: '100%',
   outline: 'none',
   fontFamily: 'inherit',
 };
-const leaveFieldEditSt: React.CSSProperties = { ...leaveFieldInputSt, border: '1px solid #3a4568' };
+const leaveFieldEditSt: React.CSSProperties = { ...leaveFieldInputSt, border: '1px solid var(--border)' };
 const leaveLabelSt: React.CSSProperties = {
   fontSize: '0.62rem',
-  color: MUTED_LABEL,
+  color: 'var(--muted)',
   textTransform: 'uppercase',
   marginBottom: 2,
   fontWeight: 600,
   letterSpacing: '0.04em',
 };
 const leaveValueSt: React.CSSProperties = {
-  color: WHITE,
+  color: 'var(--text)',
   fontWeight: 500,
   fontSize: '0.82rem',
   lineHeight: 1.25,
@@ -208,12 +209,12 @@ function LeaveReminderBoxes({
       ) : (
         <div
           style={{
-            background: '#131722',
-            border: '1px solid #2a3050',
+            background: 'var(--card)',
+            border: '1px solid var(--border)',
             borderRadius: 7,
             padding: '5px 6px',
             textAlign: 'center',
-            color: WHITE,
+            color: 'var(--text)',
             fontWeight: 600,
             fontSize: '0.8rem',
           }}
@@ -243,8 +244,8 @@ function CompactLeaveCard({ leave, onClick }: { leave: any; onClick: () => void 
         display: 'flex',
         alignItems: 'center',
         gap: 12,
-        background: '#161926',
-        border: '1px solid #2a3050',
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
         borderRadius: 12,
         padding: '13px 16px',
         marginBottom: 10,
@@ -253,12 +254,12 @@ function CompactLeaveCard({ leave, onClick }: { leave: any; onClick: () => void 
         userSelect: 'none',
       }}
       onMouseOver={e => {
-        e.currentTarget.style.borderColor = '#4f7eff';
-        e.currentTarget.style.background = 'rgba(79,126,255,0.04)';
+        e.currentTarget.style.borderColor = 'var(--primary)';
+        e.currentTarget.style.background = 'rgba(37,99,235,0.04)';
       }}
       onMouseOut={e => {
-        e.currentTarget.style.borderColor = '#2a3050';
-        e.currentTarget.style.background = '#161926';
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.background = 'var(--card)';
       }}
     >
       <div
@@ -269,7 +270,7 @@ function CompactLeaveCard({ leave, onClick }: { leave: any; onClick: () => void 
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.92rem',
-          color: WHITE,
+          color: 'var(--text)',
           fontWeight: 600,
         }}
       >
@@ -282,14 +283,14 @@ function CompactLeaveCard({ leave, onClick }: { leave: any; onClick: () => void 
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.82rem',
-          color: WHITE,
+          color: 'var(--text)',
           flexShrink: 1,
           marginLeft: 'auto',
         }}
       >
         {leaveReasonLabel(leave.leave_type)}
       </div>
-      <div style={{ fontSize: '0.82rem', color: WHITE, whiteSpace: 'nowrap', fontWeight: 600, flexShrink: 0, marginLeft: 40 }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text)', whiteSpace: 'nowrap', fontWeight: 600, flexShrink: 0, marginLeft: 40 }}>
         {getLeaveCountdownShort(leave.start_date)}
       </div>
     </div>
@@ -304,8 +305,8 @@ function PendingApprovalCard({ leave, onClick }: { leave: any; onClick: () => vo
         display: 'flex',
         alignItems: 'center',
         gap: 12,
-        background: '#161926',
-        border: '1px solid #2a3050',
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
         borderRadius: 12,
         padding: '13px 16px',
         marginBottom: 10,
@@ -314,12 +315,12 @@ function PendingApprovalCard({ leave, onClick }: { leave: any; onClick: () => vo
         userSelect: 'none',
       }}
       onMouseOver={e => {
-        e.currentTarget.style.borderColor = '#4f7eff';
-        e.currentTarget.style.background = 'rgba(79,126,255,0.04)';
+        e.currentTarget.style.borderColor = 'var(--primary)';
+        e.currentTarget.style.background = 'rgba(37,99,235,0.04)';
       }}
       onMouseOut={e => {
-        e.currentTarget.style.borderColor = '#2a3050';
-        e.currentTarget.style.background = '#161926';
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.background = 'var(--card)';
       }}
     >
       <div
@@ -330,7 +331,7 @@ function PendingApprovalCard({ leave, onClick }: { leave: any; onClick: () => vo
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.92rem',
-          color: WHITE,
+          color: 'var(--text)',
           fontWeight: 600,
         }}
       >
@@ -343,14 +344,14 @@ function PendingApprovalCard({ leave, onClick }: { leave: any; onClick: () => vo
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.82rem',
-          color: WHITE,
+          color: 'var(--text)',
           flexShrink: 1,
           marginLeft: 'auto',
         }}
       >
         {leaveReasonLabel(leave.leave_type)}
       </div>
-      <div style={{ fontSize: '0.82rem', color: '#4f7eff', whiteSpace: 'nowrap', fontWeight: 700, flexShrink: 0, marginLeft: 20 }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--primary)', whiteSpace: 'nowrap', fontWeight: 700, flexShrink: 0, marginLeft: 20 }}>
         Review {'>'}
       </div>
     </div>
@@ -439,7 +440,7 @@ function LeaveFields({
               } catch {}
             }}
             onChange={e => onChange('start_datetime', e.target.value)}
-            style={{ ...leaveFieldEditSt, colorScheme: 'dark' }}
+            style={{ ...leaveFieldEditSt,  }}
           />
         ) : (
           <div style={leaveValueSt}>{fmtLeaveDateTime(viewSource?.start_date || form.start_datetime)}</div>
@@ -459,7 +460,7 @@ function LeaveFields({
               } catch {}
             }}
             onChange={e => onChange('end_datetime', e.target.value)}
-            style={{ ...leaveFieldEditSt, colorScheme: 'dark' }}
+            style={{ ...leaveFieldEditSt,  }}
           />
         ) : (
           <div style={leaveValueSt}>{fmtLeaveDateTime(viewSource?.end_date || form.end_datetime)}</div>
@@ -591,9 +592,9 @@ function getWorkingDaysInMonth(year: number, month: number): number {
 function getInitials(name: string): string {
   if (!name) return '??';
   const n = name.trim().toLowerCase();
-  if (n.includes('ahsan') || n.includes('kabir')) return 'AK';
+  if (n.includes('jane') || n.includes('doe')) return 'AK';
   if (n.includes('kamrul') || n.includes('islam')) return 'KI';
-  if (n.includes('rafi') || n.includes('tajimur')) return 'TR';
+  if (n.includes('smith') || n.includes('john')) return 'TR';
   if (n.includes('orko')) return 'AO';
   const parts = name.trim().split(/\s+/);
   if (parts.length === 1) return (parts[0] || '').slice(0, 1).toUpperCase();
@@ -716,6 +717,8 @@ export default function HRPage() {
   const { user, token } = useAuth();
   const isAdmin = user?.role === 'Admin';
 
+  const [currentPageAtt, setCurrentPageAtt] = useState(1);
+  const [currentPageLeave, setCurrentPageLeave] = useState(1);
   const [curDate, setCurDate] = useState(todayDhaka);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -756,7 +759,7 @@ export default function HRPage() {
     client_ip: string;
   }>({
     is_office_wifi: false,
-    office_wifi_name: 'AlliedOne Office Wi-Fi',
+    office_wifi_name: 'ERP-connect Office Wi-Fi',
     is_auto_enabled: true,
     client_ip: ''
   });
@@ -1189,9 +1192,9 @@ export default function HRPage() {
         {/* Auto Attendance Setup Modal — Glassmorphism, intuitive OS switcher, copy state */}
         {showSetupModal && (() => {
           const origin = typeof window !== 'undefined' ? window.location.origin : '';
-          const winCmd = `Set-ExecutionPolicy Bypass -Scope Process -Force; $d="$env:LOCALAPPDATA\\AlliedOneERP"; if(!(Test-Path $d)){New-Item -ItemType Directory -Path $d | Out-Null}; Invoke-WebRequest -Uri "${origin}/api/attendance/download-script?os=ps1&token=${token || ''}" -OutFile "$d\\aol-attendance.ps1"; $vs='Set WshShell = CreateObject("WScript.Shell"):WshShell.Run "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File """&WshShell.ExpandEnvironmentStrings("%LOCALAPPDATA%")&"\\AlliedOneERP\\aol-attendance.ps1""", 0, False'; $vs | Out-File "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\AlliedOneAttendance.vbs"; Start-Process wscript "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\AlliedOneAttendance.vbs"; Write-Host 'Done!' -ForegroundColor Green`;
+          const winCmd = `Set-ExecutionPolicy Bypass -Scope Process -Force; $d="$env:LOCALAPPDATA\\ERP-connectERP"; if(!(Test-Path $d)){New-Item -ItemType Directory -Path $d | Out-Null}; Invoke-WebRequest -Uri "${origin}/api/attendance/download-script?os=ps1&token=${token || ''}" -OutFile "$d\\aol-attendance.ps1"; $vs='Set WshShell = CreateObject("WScript.Shell"):WshShell.Run "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File """&WshShell.ExpandEnvironmentStrings("%LOCALAPPDATA%")&"\\ERP-connectERP\\aol-attendance.ps1""", 0, False'; $vs | Out-File "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\ERP-connectAttendance.vbs"; Start-Process wscript "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\ERP-connectAttendance.vbs"; Write-Host 'Done!' -ForegroundColor Green`;
           
-          const macCmd = `curl -s "${origin}/api/attendance/download-script?os=mac&token=${token || ''}" -o ~/AlliedOne-Attendance.sh && chmod +x ~/AlliedOne-Attendance.sh && ~/AlliedOne-Attendance.sh`;
+          const macCmd = `curl -s "${origin}/api/attendance/download-script?os=mac&token=${token || ''}" -o ~/ERP-connect-Attendance.sh && chmod +x ~/ERP-connect-Attendance.sh && ~/ERP-connect-Attendance.sh`;
 
           const activeCmd = setupOs === 'windows' ? winCmd : macCmd;
 
@@ -1310,7 +1313,7 @@ export default function HRPage() {
                       transition: 'all 0.2s',
                       background: setupOs === 'windows' ? 'var(--primary)' : 'transparent',
                       color: setupOs === 'windows' ? '#fff' : 'var(--muted)',
-                      boxShadow: setupOs === 'windows' ? '0 2px 8px rgba(79,126,255,0.3)' : 'none'
+                      boxShadow: setupOs === 'windows' ? '0 2px 8px rgba(37,99,235,0.3)' : 'none'
                     }}
                   >
                     <Laptop size={15} /> Windows (PowerShell)
@@ -1332,7 +1335,7 @@ export default function HRPage() {
                       transition: 'all 0.2s',
                       background: setupOs === 'mac' ? 'var(--primary)' : 'transparent',
                       color: setupOs === 'mac' ? '#fff' : 'var(--muted)',
-                      boxShadow: setupOs === 'mac' ? '0 2px 8px rgba(79,126,255,0.3)' : 'none'
+                      boxShadow: setupOs === 'mac' ? '0 2px 8px rgba(37,99,235,0.3)' : 'none'
                     }}
                   >
                     <Terminal size={15} /> Mac / Linux (.sh)
@@ -1356,8 +1359,8 @@ export default function HRPage() {
                         width: 26,
                         height: 26,
                         borderRadius: '50%',
-                        background: 'rgba(79,126,255,0.15)',
-                        border: '1px solid rgba(79,126,255,0.3)',
+                        background: 'rgba(37,99,235,0.15)',
+                        border: '1px solid rgba(37,99,235,0.3)',
                         color: 'var(--primary)',
                         display: 'flex',
                         alignItems: 'center',
@@ -1392,8 +1395,8 @@ export default function HRPage() {
                         width: 26,
                         height: 26,
                         borderRadius: '50%',
-                        background: 'rgba(79,126,255,0.15)',
-                        border: '1px solid rgba(79,126,255,0.3)',
+                        background: 'rgba(37,99,235,0.15)',
+                        border: '1px solid rgba(37,99,235,0.3)',
                         color: 'var(--primary)',
                         display: 'flex',
                         alignItems: 'center',
@@ -1466,8 +1469,8 @@ export default function HRPage() {
                         width: 26,
                         height: 26,
                         borderRadius: '50%',
-                        background: 'rgba(79,126,255,0.15)',
-                        border: '1px solid rgba(79,126,255,0.3)',
+                        background: 'rgba(37,99,235,0.15)',
+                        border: '1px solid rgba(37,99,235,0.3)',
                         color: 'var(--primary)',
                         display: 'flex',
                         alignItems: 'center',
@@ -1502,8 +1505,8 @@ export default function HRPage() {
                         width: 26,
                         height: 26,
                         borderRadius: '50%',
-                        background: 'rgba(79,126,255,0.15)',
-                        border: '1px solid rgba(79,126,255,0.3)',
+                        background: 'rgba(37,99,235,0.15)',
+                        border: '1px solid rgba(37,99,235,0.3)',
                         color: 'var(--primary)',
                         display: 'flex',
                         alignItems: 'center',
@@ -1578,7 +1581,7 @@ export default function HRPage() {
                     borderRadius: 14,
                     background: copiedCmd ? 'var(--green)' : 'var(--primary)',
                     color: copiedCmd ? '#0d0f18' : '#fff',
-                    boxShadow: copiedCmd ? '0 4px 20px rgba(38,196,134,0.4)' : '0 4px 20px rgba(79,126,255,0.4)',
+                    boxShadow: copiedCmd ? '0 4px 20px rgba(38,196,134,0.4)' : '0 4px 20px rgba(37,99,235,0.4)',
                     transition: 'all 0.2s'
                   }}
                   onClick={handleCopy}
@@ -1598,7 +1601,7 @@ export default function HRPage() {
                 {setupOs === 'mac' && (
                   <a
                     href={`/api/attendance/download-script?os=mac&token=${token || ''}`}
-                    download={`AlliedOne-Attendance-${(user?.name || 'Employee').replace(/[^a-zA-Z0-9]/g, '_')}.sh`}
+                    download={`ERP-connect-Attendance-${(user?.name || 'Employee').replace(/[^a-zA-Z0-9]/g, '_')}.sh`}
                     className="btn btn-ghost"
                     style={{
                       width: '100%',
@@ -1800,7 +1803,7 @@ export default function HRPage() {
                         {list.length === 0 ? (
                           <tr className="empty-r"><td colSpan={4}>No records for this date.</td></tr>
                         ) : (
-                          list.map((l, idx) => {
+                          list.slice((currentPageAtt - 1) * 10, currentPageAtt * 10).map((l, idx) => {
                             const stats = monthlyStats.get(l.member_id) || { daysPresent: 0, totalHours: 0 };
                             const leaveCount = monthLeaveCounts.get(l.member_id) || 0;
                             return (
@@ -1809,7 +1812,7 @@ export default function HRPage() {
                                 <td style={{ padding: '6px 2px', textAlign: 'center' }}>
                                   <div
                                     style={{
-                                      background: l.color || '#4f7eff',
+                                      background: l.color || 'var(--primary)',
                                       width: '26px',
                                       height: '26px',
                                       borderRadius: '6px',
@@ -1857,6 +1860,7 @@ export default function HRPage() {
                       </tbody>
                     </table>
                   </div>
+                  <Pagination currentPage={currentPageAtt} totalItems={list.length} itemsPerPage={10} onPageChange={setCurrentPageAtt} />
                 );
               })()}
             </div>
@@ -1864,16 +1868,17 @@ export default function HRPage() {
             {isAdmin && openLeaveRequests.length > 0 && (
               <div style={{ padding: '20px 18px 0', width: '100%' }}>
                 <h3 style={{ marginBottom: 12, fontSize: '1.05rem', color: 'var(--text)' }}>Pending Approvals</h3>
-                {openLeaveRequests.map((l: any) => (
+                {openLeaveRequests.slice((currentPageLeave - 1) * 10, currentPageLeave * 10).map((l: any) => (
                   <PendingApprovalCard key={l.id} leave={l} onClick={() => openLeaveDetail(l)} />
                 ))}
+                <Pagination currentPage={currentPageLeave} totalItems={openLeaveRequests.length} itemsPerPage={10} onPageChange={setCurrentPageLeave} />
               </div>
             )}
 
             {isAdmin && (
               <div style={{ padding: '20px 18px 0', width: '100%' }}>
                 <h3 style={{ marginBottom: 12, fontSize: '1.05rem', color: 'var(--text)' }}>Manual Check In/Out</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', background: '#161926', padding: '16px', borderRadius: 12, border: '1px solid #2a3050' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', background: 'var(--card)', padding: '16px', borderRadius: 12, border: '1px solid var(--border)' }}>
                   <div style={{ flex: '1 1 200px' }}>
                     <select
                       className="cw-select"
@@ -1956,11 +1961,11 @@ export default function HRPage() {
         {/* Leave Request tab — Emp | Reason | deadline cards (pending only) */}
         {activeTab === 'leave' && (
           <div style={{ paddingBottom: 24 }}>
-            <div style={{ fontSize: '0.72rem', color: MUTED_LABEL, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700, marginBottom: 12 }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700, marginBottom: 12 }}>
               My Leave Requests
             </div>
             {openLeaveRequests.filter(l => !isAdmin || String(l.member_id) === String(user?.id)).length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40, color: WHITE, opacity: 0.55, fontSize: '0.85rem' }}>
+              <div style={{ textAlign: 'center', padding: 40, color: 'var(--text)', opacity: 0.55, fontSize: '0.85rem' }}>
                 No leave requests yet. Tap + to apply.
               </div>
             ) : (
@@ -2150,12 +2155,12 @@ export default function HRPage() {
             borderRadius: '50%',
             background: BLUE_GRAD,
             border: 'none',
-            color: WHITE,
+            color: 'var(--text)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 6px 22px rgba(79,126,255,0.45)',
+            boxShadow: '0 6px 22px rgba(37,99,235,0.45)',
           }}
         >
           <Plus size={24} />
@@ -2207,7 +2212,7 @@ export default function HRPage() {
           >
             <div
               style={{
-                background: '#161926',
+                background: 'var(--card)',
                 borderTop: '1px solid #2a3050',
                 borderTopLeftRadius: 18,
                 borderTopRightRadius: 18,
@@ -2235,7 +2240,7 @@ export default function HRPage() {
                   style={{
                     background: 'rgba(255,255,255,0.08)',
                     border: 'none',
-                    color: '#94a3b8',
+                    color: 'var(--muted)',
                     width: 34,
                     height: 34,
                     borderRadius: '50%',
@@ -2252,7 +2257,7 @@ export default function HRPage() {
               <div
                 style={{
                   fontSize: '0.68rem',
-                  color: WHITE,
+                  color: 'var(--text)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                   marginBottom: 10,
@@ -2287,9 +2292,9 @@ export default function HRPage() {
                     style={{
                       padding: '10px',
                       borderRadius: 9,
-                      border: '1px solid #2a3050',
-                      background: '#131722',
-                      color: WHITE,
+                      border: '1px solid var(--border)',
+                      background: 'var(--card)',
+                      color: 'var(--text)',
                       fontWeight: 600,
                       cursor: 'pointer',
                     }}
@@ -2305,7 +2310,7 @@ export default function HRPage() {
                       borderRadius: 9,
                       border: 'none',
                       background: BLUE_GRAD,
-                      color: WHITE,
+                      color: 'var(--text)',
                       fontWeight: 700,
                       cursor: leaveSaving ? 'wait' : 'pointer',
                       opacity: leaveSaving ? 0.7 : 1,
@@ -2337,7 +2342,7 @@ export default function HRPage() {
         >
           <div
             style={{
-              background: '#161926',
+              background: 'var(--card)',
               borderTop: '1px solid #2a3050',
               borderTopLeftRadius: 18,
               borderTopRightRadius: 18,
@@ -2356,7 +2361,7 @@ export default function HRPage() {
                 style={{
                   background: 'rgba(255,255,255,0.08)',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--muted)',
                   width: 34,
                   height: 34,
                   borderRadius: '50%',
@@ -2373,7 +2378,7 @@ export default function HRPage() {
             <div
               style={{
                 fontSize: '0.68rem',
-                color: WHITE,
+                color: 'var(--text)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: 10,
@@ -2407,7 +2412,7 @@ export default function HRPage() {
                 borderRadius: 9,
                 border: 'none',
                 background: BLUE_GRAD,
-                color: WHITE,
+                color: 'var(--text)',
                 fontWeight: 700,
                 fontSize: '0.95rem',
                 cursor: leaveSaving ? 'wait' : 'pointer',

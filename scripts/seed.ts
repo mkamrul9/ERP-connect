@@ -1,4 +1,4 @@
-import { initDB, dbRun, dbGet, dbAll } from './src/db.js';
+import { initDB, dbRun, dbGet, dbAll } from '../src/db.js';
 
 async function seed() {
   await initDB();

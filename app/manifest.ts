@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'ERP-connect — Modern Enterprise Resource Planning Platform',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0b0f1a',
+    background_color: 'var(--bg)',
     theme_color: '#6366f1',
     icons: [
       {

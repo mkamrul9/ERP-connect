@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
+import { 
   Home, LayoutDashboard, Users, Wallet, FileText, Phone,
   MessageCircle, Zap, Key, Shield, LogOut, X, Sun, Moon
-} from 'lucide-react';
+, Package } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -103,16 +103,25 @@ export default function Sidebar() {
               <Key size={17} /> Credentials
             </Link>
 
-            <Link href="/admin" className={pathname === '/admin' ? 'on' : ''} onClick={closeSide}>
+          <Link href="/crm" className={pathname === '/crm' ? 'on' : ''} onClick={closeSide}>
+          <Users size={17} /> CRM
+        </Link>
+        <Link href="/inventory" className={pathname === '/inventory' ? 'on' : ''} onClick={closeSide}>
+          <Package size={17} /> Inventory
+        </Link>
+        <Link href="/automations" className={pathname === '/automations' ? 'on' : ''} onClick={closeSide}>
+          <Zap size={17} /> Automations
+        </Link>
+        <Link href="/admin" className={pathname === '/admin' ? 'on' : ''} onClick={closeSide}>
               <Shield size={17} /> Admin Panel
             </Link>
           </>
         )}
 
         <div className="nav-section">Bot</div>
-        <a href="/chat.html" onClick={closeSide}>
+        <Link href="/chat" className={pathname === '/chat' ? 'on' : ''} onClick={closeSide}>
           <MessageCircle size={17} /> ERP Chat
-        </a>
+        </Link>
       </nav>
 
       {/* ── Theme Toggle ─────────────────────────────────── */}

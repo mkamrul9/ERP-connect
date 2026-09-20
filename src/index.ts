@@ -18,7 +18,7 @@ const app = new OpenClaw({
 });
 
 app.setSystemPrompt(`
-  You are the internal ERP assistant for AlliedOne.
+  You are the internal ERP assistant for ERP-connect.
   When a user messages you to check in or check out of the office:
   1. Identify their intent (IN or OUT).
   2. Use the 'log_attendance' tool.

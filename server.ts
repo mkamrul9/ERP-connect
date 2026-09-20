@@ -1,7 +1,7 @@
 /**
  * server.ts
  * 
- * Core hybrid server for AlliedOne ERP.
+ * Core hybrid server for ERP-connect ERP.
  * This server runs Express for the backend (API & AI integration) and
  * Next.js for the frontend. This architecture is designed to be highly 
  * scalable and acts as a headless CMS/API for the upcoming Mobile App.
@@ -43,7 +43,7 @@ async function start() {
   });
 
   bot.setSystemPrompt(`
-    You are the internal ERP assistant for AlliedOne.
+    You are the internal ERP assistant for ERP-connect.
     When a user messages you to check in or check out of the office:
     1. Identify their intent (IN or OUT).
     2. Use the 'log_attendance' tool.
@@ -66,7 +66,7 @@ async function start() {
 
   app.listen(port, '0.0.0.0', () => {
     console.log('============================================================');
-    console.log('ALLIEDONE ERP SYSTEM READY (Next.js + Express)');
+    console.log('ERP-CONNECT ERP SYSTEM READY (Next.js + Express)');
     console.log(`Running on http://0.0.0.0:${port}`);
     console.log('============================================================');
   });

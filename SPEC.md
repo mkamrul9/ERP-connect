@@ -1,6 +1,6 @@
-# AlliedOne ERP — Feature Specification
+# ERP-connect ERP — Feature Specification
 
-> **Purpose:** This is the living specification document for the AlliedOne ERP System.
+> **Purpose:** This is the living specification document for the ERP-connect ERP System.
 > It documents every feature, screen, API endpoint, and data model that has been **implemented and is currently working** in production.
 > Every developer or AI agent working on this codebase must read this file before making changes.
 > **Update this file every time a new feature is added, modified, or removed.**
@@ -37,7 +37,7 @@
 
 ### 1.1 Architecture
 
-AlliedOne ERP is a **Hybrid Headless Application**:
+ERP-connect ERP is a **Hybrid Headless Application**:
 
 - **Frontend:** Next.js 16 (App Router) — serves all UI pages via SSR
 - **Backend:** Express 5 + TypeScript — runs as `server.ts`, registers all REST API routes
@@ -123,7 +123,7 @@ Browser -> Port 3000
 
 A persistent left sidebar displays:
 
-- **Logo:** AlliedOne ERP System (with Zap icon)
+- **Logo:** ERP-connect ERP System (with Zap icon)
 - **User Profile Widget:** Avatar (first letter of name), full name, role — shown when logged in
 - **Navigation Links (Workspace group):**
   - Daily Tasks -> `/dashboard`
@@ -852,4 +852,4 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 ---
 
-*Maintained by the AlliedOne Development Team · Update this document on every feature change.*
+*Maintained by the ERP-connect Development Team · Update this document on every feature change.*

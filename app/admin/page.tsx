@@ -41,7 +41,7 @@ export default function AdminPage() {
 
   const [wifiSettings, setWifiSettings] = useState({
     office_wifi_ip: '',
-    office_wifi_name: 'AlliedOne Office Wi-Fi',
+    office_wifi_name: 'ERP-connect Office Wi-Fi',
     wifi_auto_attendance_enabled: true,
     auto_checkout_timeout_minutes: 10,
     detected_client_ip: '',
@@ -102,9 +102,9 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('✅ Test message delivered to your Telegram!');
+        showToast(' Test message delivered to your Telegram!');
       } else {
-        showToast('❌ ' + (data.error || 'Failed to send'));
+        showToast(' ' + (data.error || 'Failed to send'));
       }
     } catch (e) {
       showToast('Failed to reach server.');
@@ -132,11 +132,11 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (data.botInfo?.success) {
-        showToast(`✅ Saved & Connected as @${data.botInfo.bot?.username}!`);
+        showToast(` Saved & Connected as @${data.botInfo.bot?.username}!`);
         setBotTokenInput('');
         loadTelegramStatus();
       } else if (data.success) {
-        showToast(`⚠️ Token saved, but Telegram returned: ${data.botInfo?.error || 'Invalid token'}`);
+        showToast(` Token saved, but Telegram returned: ${data.botInfo?.error || 'Invalid token'}`);
         loadTelegramStatus();
       } else {
         showToast('Failed to save token');
@@ -364,9 +364,9 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('✅ Test message sent successfully!');
+        showToast(' Test message sent successfully!');
       } else {
-        showToast('❌ Failed: ' + (data.error || 'Unknown error'));
+        showToast(' Failed: ' + (data.error || 'Unknown error'));
         console.error('Telegram Error:', data.error);
       }
     } catch (e) {
@@ -387,12 +387,12 @@ export default function AdminPage() {
       const data = await res.json();
       const telegramKeys = data.keys.filter((k: string) => k.toUpperCase().includes('TELEGRAM'));
       if (data.hasToken) {
-        showToast('✅ TELEGRAM_BOT_TOKEN is present on the server!');
+        showToast(' TELEGRAM_BOT_TOKEN is present on the server!');
       } else {
         if (telegramKeys.length > 0) {
-          showToast(`❌ Found weird token keys: ${telegramKeys.join(', ')}`);
+          showToast(` Found weird token keys: ${telegramKeys.join(', ')}`);
         } else {
-          showToast('❌ Server CANNOT see TELEGRAM_BOT_TOKEN completely.');
+          showToast(' Server CANNOT see TELEGRAM_BOT_TOKEN completely.');
         }
       }
       console.log('Server Env Keys:', data.keys);
@@ -502,7 +502,7 @@ export default function AdminPage() {
                     </>
                   ) : (
                     <span style={{ color: 'var(--red)' }}>
-                      ❌ {telegramStatus?.error || 'TELEGRAM_BOT_TOKEN missing in environment (Render).'}
+                       {telegramStatus?.error || 'TELEGRAM_BOT_TOKEN missing in environment (Render).'}
                     </span>
                   )}
                 </div>
@@ -510,7 +510,7 @@ export default function AdminPage() {
 
               {telegramStatus?.success && (
                 <div style={{ fontSize: '.75rem', color: 'var(--muted)', background: 'rgba(255,255,255,.05)', padding: '6px 12px', borderRadius: '8px' }}>
-                  ⚠️ <strong>Rule:</strong> You must click <code>START</code> inside Telegram once before the bot can message you.
+                   <strong>Rule:</strong> You must click <code>START</code> inside Telegram once before the bot can message you.
                 </div>
               )}
             </div>
@@ -538,7 +538,7 @@ export default function AdminPage() {
                   <span style={{ color: 'var(--primary)' }}>Fallback TELEGRAM_CHAT_ID: {telegramStatus.defaultChatId}</span>
                 ) : (
                   <span style={{ color: 'var(--red)', fontWeight: 600 }}>
-                    ⚠️ No Chat ID configured! Edit an Admin above to add their Telegram Chat ID.
+                     No Chat ID configured! Edit an Admin above to add their Telegram Chat ID.
                   </span>
                 )}
               </div>
@@ -596,7 +596,7 @@ export default function AdminPage() {
                 </button>
               </div>
               <div style={{ fontSize: '.75rem', color: 'var(--muted)', lineHeight: '1.5' }}>
-                💡 <strong>How to get your numeric Chat ID:</strong> Open Telegram, search for <code>@userinfobot</code>, and send <code>/start</code>. It will reply with your numeric ID (e.g. <code>123456789</code>). Put that ID above or save it in your Admin profile.
+                 <strong>How to get your numeric Chat ID:</strong> Open Telegram, search for <code>@userinfobot</code>, and send <code>/start</code>. It will reply with your numeric ID (e.g. <code>123456789</code>). Put that ID above or save it in your Admin profile.
               </div>
             </div>
           </div>
@@ -675,7 +675,7 @@ export default function AdminPage() {
                 <label>Wi-Fi Network Display Name</label>
                 <input
                   type="text"
-                  placeholder="e.g. AlliedOne Office Wi-Fi"
+                  placeholder="e.g. ERP-connect Office Wi-Fi"
                   value={wifiSettings.office_wifi_name}
                   onChange={e => setWifiSettings({ ...wifiSettings, office_wifi_name: e.target.value })}
                 />
@@ -748,7 +748,7 @@ export default function AdminPage() {
                         <tr key={d.member_id}>
                           <td>
                             <div className="av-cell">
-                              <div className="av" style={{ background: d.avatar_color || '#4f7eff', width: '24px', height: '24px', fontSize: '.7rem' }}>
+                              <div className="av" style={{ background: d.avatar_color || 'var(--primary)', width: '24px', height: '24px', fontSize: '.7rem' }}>
                                 {d.member_name ? d.member_name[0].toUpperCase() : 'E'}
                               </div>
                               <div>

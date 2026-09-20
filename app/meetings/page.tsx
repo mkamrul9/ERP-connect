@@ -5,6 +5,7 @@
  */
 'use client';
 
+import Pagination from '../components/Pagination';
 import { useState, useEffect, useCallback } from 'react';
 import { Calendar, Trash2, Pencil, X, Plus } from 'lucide-react';
 import Topbar from '../components/Topbar';
@@ -45,27 +46,27 @@ const BLUE_BG = 'rgba(79,126,255,0.15)';
 const BLUE_GRAD = 'linear-gradient(135deg, #4f7eff, #6c4fe3)';
 
 const fieldInputSt: React.CSSProperties = {
-  background: '#131722',
-  border: '1px solid #2a3050',
+  background: 'var(--card)',
+  border: '1px solid var(--border)',
   borderRadius: 7,
-  color: WHITE,
+  color: 'var(--text)',
   fontSize: '0.78rem',
   padding: '6px 9px',
   width: '100%',
   outline: 'none',
   fontFamily: 'inherit',
 };
-const fieldEditSt: React.CSSProperties = { ...fieldInputSt, border: '1px solid #3a4568' };
+const fieldEditSt: React.CSSProperties = { ...fieldInputSt, border: '1px solid var(--border)' };
 const labelSt: React.CSSProperties = {
   fontSize: '0.62rem',
-  color: MUTED_LABEL,
+  color: 'var(--muted)',
   textTransform: 'uppercase',
   marginBottom: 2,
   fontWeight: 600,
   letterSpacing: '0.04em',
 };
 const valueSt: React.CSSProperties = {
-  color: WHITE,
+  color: 'var(--text)',
   fontWeight: 500,
   fontSize: '0.82rem',
   lineHeight: 1.25,
@@ -174,12 +175,12 @@ function ReminderBoxes({
       ) : (
         <div
           style={{
-            background: '#131722',
-            border: '1px solid #2a3050',
+            background: 'var(--card)',
+            border: '1px solid var(--border)',
             borderRadius: 7,
             padding: '5px 6px',
             textAlign: 'center',
-            color: WHITE,
+            color: 'var(--text)',
             fontWeight: 600,
             fontSize: '0.8rem',
           }}
@@ -210,8 +211,8 @@ function CompactMeetingCard({ meeting, onClick }: { meeting: Meeting; onClick: (
         display: 'flex',
         alignItems: 'center',
         gap: 12,
-        background: '#161926',
-        border: '1px solid #2a3050',
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
         borderRadius: 12,
         padding: '13px 16px',
         marginBottom: 10,
@@ -220,12 +221,12 @@ function CompactMeetingCard({ meeting, onClick }: { meeting: Meeting; onClick: (
         userSelect: 'none',
       }}
       onMouseOver={e => {
-        e.currentTarget.style.borderColor = '#4f7eff';
-        e.currentTarget.style.background = 'rgba(79,126,255,0.04)';
+        e.currentTarget.style.borderColor = 'var(--primary)';
+        e.currentTarget.style.background = 'var(--primary-dim)';
       }}
       onMouseOut={e => {
-        e.currentTarget.style.borderColor = '#2a3050';
-        e.currentTarget.style.background = '#161926';
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.background = 'var(--card)';
       }}
     >
       <div
@@ -236,7 +237,7 @@ function CompactMeetingCard({ meeting, onClick }: { meeting: Meeting; onClick: (
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.92rem',
-          color: WHITE,
+          color: 'var(--text)',
           fontWeight: 600,
         }}
       >
@@ -249,14 +250,14 @@ function CompactMeetingCard({ meeting, onClick }: { meeting: Meeting; onClick: (
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.82rem',
-          color: WHITE,
+          color: 'var(--text)',
           flexShrink: 1,
           marginLeft: 'auto',
         }}
       >
         {meeting.contact_name || '—'}
       </div>
-      <div style={{ fontSize: '0.82rem', color: WHITE, whiteSpace: 'nowrap', fontWeight: 600, flexShrink: 0, marginLeft: 40 }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text)', whiteSpace: 'nowrap', fontWeight: 600, flexShrink: 0, marginLeft: 40 }}>
         {getCountdownShort(meeting.scheduled_at)}
       </div>
     </div>
@@ -320,7 +321,7 @@ function MeetingFields({
               } catch {}
             }}
             onChange={e => onChange('scheduled_at', e.target.value)}
-            style={{ ...fieldEditSt, colorScheme: 'dark' }}
+            style={{ ...fieldEditSt,  }}
           />
         ) : (
           <div style={valueSt}>{v?.scheduled_at ? fmtDateTime(v.scheduled_at) : '—'}</div>
@@ -334,6 +335,7 @@ function MeetingFields({
 
 export default function MeetingsPage() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState('');
 
@@ -459,12 +461,12 @@ export default function MeetingsPage() {
             left: '50%',
             transform: 'translateX(-50%)',
             background: '#1d2133',
-            border: '1px solid #2a3050',
+            border: '1px solid var(--border)',
             borderRadius: 10,
             padding: '10px 20px',
             fontSize: '.84rem',
             zIndex: 99999,
-            color: WHITE,
+            color: 'var(--text)',
             whiteSpace: 'nowrap',
             boxShadow: '0 4px 20px rgba(0,0,0,.4)',
           }}
@@ -482,17 +484,18 @@ export default function MeetingsPage() {
         }}
       >
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 48, color: WHITE, opacity: 0.6, fontSize: '0.85rem' }}>Loading...</div>
+          <div style={{ textAlign: 'center', padding: 48, color: 'var(--text)', opacity: 0.6, fontSize: '0.85rem' }}>Loading...</div>
         ) : meetings.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 48, color: WHITE, opacity: 0.6, fontSize: '0.85rem' }}>
+          <div style={{ textAlign: 'center', padding: 48, color: 'var(--text)', opacity: 0.6, fontSize: '0.85rem' }}>
             <Calendar size={28} style={{ opacity: 0.3, display: 'block', margin: '0 auto 10px' }} />
             No meetings yet. Tap + to schedule one.
           </div>
         ) : (
-          meetings.map(m => <CompactMeetingCard key={m.id} meeting={m} onClick={() => openDetail(m)} />)
+          meetings.slice((currentPage - 1) * 10, currentPage * 10).map(m => <CompactMeetingCard key={m.id} meeting={m} onClick={() => openDetail(m)} />)
         )}
       </div>
 
+      <Pagination currentPage={currentPage} totalItems={meetings.length} itemsPerPage={10} onPageChange={setCurrentPage} />
       <button
         onClick={() => {
           setAddForm(BLANK);
@@ -508,7 +511,7 @@ export default function MeetingsPage() {
           borderRadius: '50%',
           background: BLUE_GRAD,
           border: 'none',
-          color: WHITE,
+          color: 'var(--text)',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -536,7 +539,7 @@ export default function MeetingsPage() {
         >
           <div
             style={{
-              background: '#161926',
+              background: 'var(--card)',
               borderTop: '1px solid #2a3050',
               borderTopLeftRadius: 18,
               borderTopRightRadius: 18,
@@ -597,7 +600,7 @@ export default function MeetingsPage() {
                 style={{
                   background: 'rgba(255,255,255,0.08)',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--muted)',
                   width: 34,
                   height: 34,
                   borderRadius: '50%',
@@ -614,7 +617,7 @@ export default function MeetingsPage() {
             <div
               style={{
                 fontSize: '0.68rem',
-                color: WHITE,
+                color: 'var(--text)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: 10,
@@ -644,9 +647,9 @@ export default function MeetingsPage() {
                   style={{
                     padding: '10px',
                     borderRadius: 9,
-                    border: '1px solid #2a3050',
-                    background: '#131722',
-                    color: WHITE,
+                    border: '1px solid var(--border)',
+                    background: 'var(--card)',
+                    color: 'var(--text)',
                     fontSize: '0.84rem',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -664,7 +667,7 @@ export default function MeetingsPage() {
                     borderRadius: 9,
                     border: 'none',
                     background: BLUE_GRAD,
-                    color: WHITE,
+                    color: 'var(--text)',
                     fontSize: '0.84rem',
                     fontWeight: 700,
                     cursor: 'pointer',
@@ -697,9 +700,9 @@ export default function MeetingsPage() {
           <div
             style={{
               position: 'relative',
-              background: '#161926',
+              background: 'var(--card)',
               borderRadius: '18px 18px 0 0',
-              border: '1px solid #2a3050',
+              border: '1px solid var(--border)',
               borderBottom: 'none',
               padding: '12px 16px 16px',
               paddingBottom: 'max(14px, env(safe-area-inset-bottom))',
@@ -709,10 +712,10 @@ export default function MeetingsPage() {
               overflow: 'hidden',
             }}
           >
-            <div style={{ width: 36, height: 3, background: '#2a3050', borderRadius: 2, margin: '0 auto 10px' }} />
+            <div style={{ width: 36, height: 3, background: 'var(--border)', borderRadius: 2, margin: '0 auto 10px' }} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: WHITE, margin: 0 }}>Add Meeting</h3>
-              <button onClick={() => setShowAdd(false)} style={{ background: 'none', border: 'none', color: WHITE, cursor: 'pointer', padding: 4, opacity: 0.7 }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>Add Meeting</h3>
+              <button onClick={() => setShowAdd(false)} style={{ background: 'none', border: 'none', color: 'var(--text)', cursor: 'pointer', padding: 4, opacity: 0.7 }}>
                 <X size={18} />
               </button>
             </div>
@@ -730,7 +733,7 @@ export default function MeetingsPage() {
                 borderRadius: 9,
                 border: 'none',
                 background: BLUE_GRAD,
-                color: WHITE,
+                color: 'var(--text)',
                 fontSize: '0.9rem',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -764,17 +767,17 @@ export default function MeetingsPage() {
         >
           <div
             style={{
-              background: '#161926',
-              border: '1px solid #2a3050',
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
               borderRadius: 16,
               width: '100%',
               maxWidth: 340,
               padding: 22,
             }}
           >
-            <h3 style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, marginBottom: 8, color: WHITE }}>Delete Meeting?</h3>
-            <p style={{ textAlign: 'center', fontSize: '.88rem', fontWeight: 600, color: WHITE, marginBottom: 4 }}>{deleteTarget.title}</p>
-            <p style={{ textAlign: 'center', fontSize: '.76rem', color: WHITE, opacity: 0.6, marginBottom: 20 }}>{fmtDateTime(deleteTarget.scheduled_at)}</p>
+            <h3 style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, marginBottom: 8, color: 'var(--text)' }}>Delete Meeting?</h3>
+            <p style={{ textAlign: 'center', fontSize: '.88rem', fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>{deleteTarget.title}</p>
+            <p style={{ textAlign: 'center', fontSize: '.76rem', color: 'var(--text)', opacity: 0.6, marginBottom: 20 }}>{fmtDateTime(deleteTarget.scheduled_at)}</p>
             <div style={{ display: 'flex', gap: 10 }}>
               <button
                 onClick={() => setDeleteTarget(null)}
@@ -782,9 +785,9 @@ export default function MeetingsPage() {
                   flex: 1,
                   padding: '11px',
                   borderRadius: 10,
-                  border: '1px solid #2a3050',
-                  background: '#131722',
-                  color: WHITE,
+                  border: '1px solid var(--border)',
+                  background: 'var(--card)',
+                  color: 'var(--text)',
                   fontSize: '.88rem',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -801,7 +804,7 @@ export default function MeetingsPage() {
                   borderRadius: 10,
                   border: 'none',
                   background: BLUE_GRAD,
-                  color: WHITE,
+                  color: 'var(--text)',
                   fontSize: '.88rem',
                   fontWeight: 700,
                   cursor: 'pointer',

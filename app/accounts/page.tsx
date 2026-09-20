@@ -6,6 +6,8 @@
  */
 'use client';
 
+import Pagination from '../components/Pagination';
+import FinancialAnalytics from '../components/FinancialAnalytics';
 import { useState, useCallback, useEffect } from 'react';
 import { Pencil, Trash2, X, Plus } from 'lucide-react';
 import Topbar from '../components/Topbar';
@@ -96,28 +98,28 @@ const BLUE_BG = 'rgba(79,126,255,0.15)';
 const BLUE_GRAD = 'linear-gradient(135deg, #4f7eff, #6c4fe3)';
 
 const fieldInputSt: React.CSSProperties = {
-  background: '#131722',
-  border: '1px solid #2a3050',
+  background: 'var(--card)',
+  border: '1px solid var(--border)',
   borderRadius: 7,
-  color: WHITE,
+  color: 'var(--text)',
   fontSize: '0.78rem',
   padding: '6px 9px',
   width: '100%',
   outline: 'none',
   fontFamily: 'inherit',
 };
-const fieldEditSt: React.CSSProperties = { ...fieldInputSt, border: '1px solid #3a4568' };
+const fieldEditSt: React.CSSProperties = { ...fieldInputSt, border: '1px solid var(--border)' };
 const fieldSelectSt: React.CSSProperties = { ...fieldEditSt, cursor: 'pointer' };
 const labelSt: React.CSSProperties = {
   fontSize: '0.62rem',
-  color: MUTED_LABEL,
+  color: 'var(--muted)',
   textTransform: 'uppercase',
   marginBottom: 2,
   fontWeight: 600,
   letterSpacing: '0.04em',
 };
 const valueSt: React.CSSProperties = {
-  color: WHITE,
+  color: 'var(--text)',
   fontWeight: 500,
   fontSize: '0.82rem',
   lineHeight: 1.25,
@@ -185,8 +187,8 @@ function CompactExpenseCard({ expense, onClick }: { expense: any; onClick: () =>
         display: 'flex',
         alignItems: 'center',
         gap: 12,
-        background: '#161926',
-        border: '1px solid #2a3050',
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
         borderRadius: 12,
         padding: '13px 16px',
         marginBottom: 10,
@@ -195,15 +197,15 @@ function CompactExpenseCard({ expense, onClick }: { expense: any; onClick: () =>
         userSelect: 'none',
       }}
       onMouseOver={e => {
-        e.currentTarget.style.borderColor = '#4f7eff';
-        e.currentTarget.style.background = 'rgba(79,126,255,0.04)';
+        e.currentTarget.style.borderColor = 'var(--primary)';
+        e.currentTarget.style.background = 'var(--primary-dim)';
       }}
       onMouseOut={e => {
-        e.currentTarget.style.borderColor = '#2a3050';
-        e.currentTarget.style.background = '#161926';
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.background = 'var(--card)';
       }}
     >
-      <div style={{ fontSize: '0.82rem', color: WHITE, fontWeight: 600, flexShrink: 0, whiteSpace: 'nowrap' }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text)', fontWeight: 600, flexShrink: 0, whiteSpace: 'nowrap' }}>
         {fmtDateShort(expense.expense_date)}
       </div>
       <div
@@ -214,7 +216,7 @@ function CompactExpenseCard({ expense, onClick }: { expense: any; onClick: () =>
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontSize: '0.92rem',
-          color: WHITE,
+          color: 'var(--text)',
           fontWeight: 600,
           textAlign: 'center',
         }}
@@ -225,7 +227,7 @@ function CompactExpenseCard({ expense, onClick }: { expense: any; onClick: () =>
         style={{
           maxWidth: '38%',
           fontSize: '0.82rem',
-          color: WHITE,
+          color: 'var(--text)',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -261,7 +263,7 @@ function ExpenseFields({
         <div>
           <FieldLabel>Date</FieldLabel>
           {editMode ? (
-            <input type="date" value={form.date} onChange={e => onChange('date', e.target.value)} style={{ ...fieldEditSt, colorScheme: 'dark' }} />
+            <input type="date" value={form.date} onChange={e => onChange('date', e.target.value)} style={{ ...fieldEditSt,  }} />
           ) : (
             <div style={valueSt}>{fmtDate(v?.expense_date)}</div>
           )}
@@ -357,9 +359,11 @@ export default function AccountsPage() {
   );
 
   const curMonth = new Date().toISOString().substring(0, 7);
+  const [tab, setTab] = useState<'list' | 'analytics'>('list');
   const [month, setMonth] = useState(curMonth);
   const [expenses, setExpenses] = useState<any[]>([]);
   const [monthTotal, setMonthTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
 
@@ -508,12 +512,12 @@ export default function AccountsPage() {
             left: '50%',
             transform: 'translateX(-50%)',
             background: '#1d2133',
-            border: '1px solid #2a3050',
+            border: '1px solid var(--border)',
             borderRadius: 10,
             padding: '10px 20px',
             fontSize: '.84rem',
             zIndex: 99999,
-            color: WHITE,
+            color: 'var(--text)',
             whiteSpace: 'nowrap',
             boxShadow: '0 4px 20px rgba(0,0,0,.4)',
           }}
@@ -531,28 +535,48 @@ export default function AccountsPage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-          <label style={{ fontSize: '0.72rem', fontWeight: 700, color: MUTED_LABEL, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          <label style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Month
           </label>
           <input
             type="month"
             value={month}
             onChange={e => setMonth(e.target.value)}
-            style={{ ...fieldInputSt, width: 'auto', minWidth: 150, colorScheme: 'dark' }}
+            style={{ ...fieldInputSt, width: 'auto', minWidth: 150,  }}
           />
-          <div style={{ marginLeft: 'auto', fontSize: '0.84rem', fontWeight: 700, color: WHITE }}>
+          <div style={{ marginLeft: 'auto', fontSize: '0.84rem', fontWeight: 700, color: 'var(--text)' }}>
             {fmtBDT(monthTotal)}
           </div>
         </div>
 
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: 48, color: WHITE, opacity: 0.6, fontSize: '0.85rem' }}>Loading...</div>
+        <div className="tabs" style={{ display: 'flex', gap: 20, marginBottom: 20, borderBottom: '1px solid var(--border)' }}>
+          <div 
+            onClick={() => setTab('list')}
+            style={{ padding: '10px 10px', fontSize: '0.88rem', fontWeight: tab === 'list' ? 700 : 500, color: tab === 'list' ? 'var(--primary)' : 'var(--muted)', borderBottom: tab === 'list' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', transition: 'all 0.15s' }}>
+            Expenses List
+          </div>
+          <div 
+            onClick={() => setTab('analytics')}
+            style={{ padding: '10px 10px', fontSize: '0.88rem', fontWeight: tab === 'analytics' ? 700 : 500, color: tab === 'analytics' ? 'var(--primary)' : 'var(--muted)', borderBottom: tab === 'analytics' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', transition: 'all 0.15s' }}>
+            Analytics BI
+          </div>
+        </div>
+
+        {tab === 'list' ? (
+          <>
+            {loading ? (
+          <div style={{ textAlign: 'center', padding: 48, color: 'var(--text)', opacity: 0.6, fontSize: '0.85rem' }}>Loading...</div>
         ) : expenses.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 48, color: WHITE, opacity: 0.6, fontSize: '0.85rem' }}>
+          <div style={{ textAlign: 'center', padding: 48, color: 'var(--text)', opacity: 0.6, fontSize: '0.85rem' }}>
             No expenses this month. Tap + to add one.
           </div>
         ) : (
-          expenses.map(exp => <CompactExpenseCard key={exp.id} expense={exp} onClick={() => openDetail(exp)} />)
+          expenses.slice((currentPage - 1) * 10, currentPage * 10).map(exp => <CompactExpenseCard key={exp.id} expense={exp} onClick={() => openDetail(exp)} />)
+        )}
+            <Pagination currentPage={currentPage} totalItems={expenses.length} itemsPerPage={10} onPageChange={setCurrentPage} />
+          </>
+        ) : (
+          <FinancialAnalytics expenses={expenses} />
         )}
       </div>
 
@@ -572,7 +596,7 @@ export default function AccountsPage() {
           borderRadius: '50%',
           background: BLUE_GRAD,
           border: 'none',
-          color: WHITE,
+          color: 'var(--text)',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
@@ -601,7 +625,7 @@ export default function AccountsPage() {
         >
           <div
             style={{
-              background: '#161926',
+              background: 'var(--card)',
               borderTop: '1px solid #2a3050',
               borderTopLeftRadius: 18,
               borderTopRightRadius: 18,
@@ -662,7 +686,7 @@ export default function AccountsPage() {
                 style={{
                   background: 'rgba(255,255,255,0.08)',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--muted)',
                   width: 34,
                   height: 34,
                   borderRadius: '50%',
@@ -679,7 +703,7 @@ export default function AccountsPage() {
             <div
               style={{
                 fontSize: '0.68rem',
-                color: WHITE,
+                color: 'var(--text)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
                 marginBottom: 10,
@@ -709,9 +733,9 @@ export default function AccountsPage() {
                   style={{
                     padding: '10px',
                     borderRadius: 9,
-                    border: '1px solid #2a3050',
-                    background: '#131722',
-                    color: WHITE,
+                    border: '1px solid var(--border)',
+                    background: 'var(--card)',
+                    color: 'var(--text)',
                     fontSize: '0.84rem',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -729,7 +753,7 @@ export default function AccountsPage() {
                     borderRadius: 9,
                     border: 'none',
                     background: BLUE_GRAD,
-                    color: WHITE,
+                    color: 'var(--text)',
                     fontSize: '0.84rem',
                     fontWeight: 700,
                     cursor: 'pointer',
@@ -763,9 +787,9 @@ export default function AccountsPage() {
           <div
             style={{
               position: 'relative',
-              background: '#161926',
+              background: 'var(--card)',
               borderRadius: '18px 18px 0 0',
-              border: '1px solid #2a3050',
+              border: '1px solid var(--border)',
               borderBottom: 'none',
               padding: '12px 16px 16px',
               paddingBottom: 'max(14px, env(safe-area-inset-bottom))',
@@ -775,10 +799,10 @@ export default function AccountsPage() {
               overflow: 'hidden',
             }}
           >
-            <div style={{ width: 36, height: 3, background: '#2a3050', borderRadius: 2, margin: '0 auto 10px' }} />
+            <div style={{ width: 36, height: 3, background: 'var(--border)', borderRadius: 2, margin: '0 auto 10px' }} />
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: WHITE, margin: 0 }}>Add Expense</h3>
-              <button onClick={() => setShowAdd(false)} style={{ background: 'none', border: 'none', color: WHITE, cursor: 'pointer', padding: 4, opacity: 0.7 }}>
+              <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>Add Expense</h3>
+              <button onClick={() => setShowAdd(false)} style={{ background: 'none', border: 'none', color: 'var(--text)', cursor: 'pointer', padding: 4, opacity: 0.7 }}>
                 <X size={18} />
               </button>
             </div>
@@ -796,7 +820,7 @@ export default function AccountsPage() {
                 borderRadius: 9,
                 border: 'none',
                 background: BLUE_GRAD,
-                color: WHITE,
+                color: 'var(--text)',
                 fontSize: '0.9rem',
                 fontWeight: 700,
                 cursor: 'pointer',
@@ -831,17 +855,17 @@ export default function AccountsPage() {
         >
           <div
             style={{
-              background: '#161926',
-              border: '1px solid #2a3050',
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
               borderRadius: 16,
               width: '100%',
               maxWidth: 340,
               padding: 22,
             }}
           >
-            <h3 style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, marginBottom: 8, color: WHITE }}>Delete Expense?</h3>
-            <p style={{ textAlign: 'center', fontSize: '.88rem', color: WHITE, marginBottom: 4 }}>{fmtDate(deleteTarget.expense_date)}</p>
-            <p style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, color: WHITE, marginBottom: 20 }}>{fmtBDT(deleteTarget.amount)}</p>
+            <h3 style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, marginBottom: 8, color: 'var(--text)' }}>Delete Expense?</h3>
+            <p style={{ textAlign: 'center', fontSize: '.88rem', color: 'var(--text)', marginBottom: 4 }}>{fmtDate(deleteTarget.expense_date)}</p>
+            <p style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 700, color: 'var(--text)', marginBottom: 20 }}>{fmtBDT(deleteTarget.amount)}</p>
             <div style={{ display: 'flex', gap: 10 }}>
               <button
                 onClick={() => setDeleteTarget(null)}
@@ -849,9 +873,9 @@ export default function AccountsPage() {
                   flex: 1,
                   padding: '11px',
                   borderRadius: 10,
-                  border: '1px solid #2a3050',
-                  background: '#131722',
-                  color: WHITE,
+                  border: '1px solid var(--border)',
+                  background: 'var(--card)',
+                  color: 'var(--text)',
                   fontSize: '.88rem',
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -868,7 +892,7 @@ export default function AccountsPage() {
                   borderRadius: 10,
                   border: 'none',
                   background: BLUE_GRAD,
-                  color: WHITE,
+                  color: 'var(--text)',
                   fontSize: '.88rem',
                   fontWeight: 700,
                   cursor: 'pointer',

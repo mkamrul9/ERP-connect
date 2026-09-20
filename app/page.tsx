@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 const ADMIN_MODULES = [
   { href: '/accounts',    icon: Wallet,          title: 'Accounts',        desc: 'Track expenses and billing',               color: '#eab308' },
   { href: '/credentials', icon: Key,             title: 'Credentials',     desc: 'Securely store and share access keys',     color: '#a855f7' },
-  { href: '/dashboard',   icon: LayoutDashboard, title: 'Daily Tasks',     desc: 'Manage daily status and assignments',      color: '#4f7eff' },
+  { href: '/dashboard',   icon: LayoutDashboard, title: 'Daily Tasks',     desc: 'Manage daily status and assignments',      color: 'var(--primary)' },
   { href: '/hr',          icon: Users,           title: 'HR & Attendance',  desc: 'Mark attendance and leave requests',       color: '#22c55e' },
   { href: '/meetings',    icon: Phone,           title: 'Meetings',         desc: 'Schedule and track client calls',          color: '#f97316' },
   { href: '/tenders',     icon: FileText,        title: 'Tenders',          desc: 'Manage tender documents and status',       color: '#0ea5e9' },
@@ -18,7 +18,7 @@ const ADMIN_MODULES = [
 ];
 
 const EMPLOYEE_MODULES = [
-  { href: '/dashboard',   icon: LayoutDashboard, title: 'Daily Tasks',     desc: 'View your assigned tasks',                 color: '#4f7eff' },
+  { href: '/dashboard',   icon: LayoutDashboard, title: 'Daily Tasks',     desc: 'View your assigned tasks',                 color: 'var(--primary)' },
   { href: '/hr',          icon: Users,           title: 'HR & Attendance',  desc: 'Mark attendance and leave requests',       color: '#22c55e' },
   { href: '/chat.html',   icon: MessageCircle,   title: 'ERP Chat',         desc: 'Talk to the automated ERP Bot',           color: '#14b8a6' },
 ];
@@ -112,11 +112,11 @@ export default function HomePage() {
         body: JSON.stringify({ member_id: user.id, action_type: type })
       });
       if (res.ok) {
-        showToast(`✅ ${type === 'IN' ? 'Checked In' : 'Checked Out'} at ${nowDhaka()}`);
+        showToast(` ${type === 'IN' ? 'Checked In' : 'Checked Out'} at ${nowDhaka()}`);
         await loadAttendance();
       } else {
         const err = await res.json().catch(() => ({}));
-        showToast('❌ ' + (err.error || 'Failed to record attendance'));
+        showToast(' ' + (err.error || 'Failed to record attendance'));
       }
     } catch (e) {
       showToast('Failed to reach server.');
@@ -188,12 +188,12 @@ export default function HomePage() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: 60, height: 60, borderRadius: '18px',
-            background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(20,184,166,0.15))',
-            border: '1px solid rgba(99,102,241,0.25)',
+            background: 'linear-gradient(135deg, rgba(37, 99, 235,0.2), rgba(20,184,166,0.15))',
+            border: '1px solid rgba(37, 99, 235,0.25)',
             marginBottom: 18,
-            boxShadow: '0 8px 24px rgba(99,102,241,0.2)',
+            boxShadow: '0 8px 24px rgba(37, 99, 235,0.2)',
           }}>
-            <Zap size={28} color="#6366f1" />
+            <Zap size={28} color="#2563eb" />
           </div>
           <h1 style={{
             fontSize: '1.9rem', fontWeight: 800, color: 'var(--text)',

@@ -22,7 +22,7 @@ const __dirname  = path.dirname(__filename);
 export { initDB, dbAll, dbGet, dbRun, isPostgres };
 
 // Add default secret if not provided
-const JWT_SECRET = process.env.JWT_SECRET || 'alliedone_super_secret_key_123!';
+const JWT_SECRET = process.env.JWT_SECRET || 'erp-connect_super_secret_key_123!';
 
 async function notifyMember(memberId: number, message: string, link: string = '') {
   await dbRun(`INSERT INTO notifications(member_id,message,link) VALUES(?,?,?)`, [memberId, message, link]);
@@ -153,6 +153,16 @@ export class OpenClaw {
   constructor(config: any) {
     this.config = config; this.tools = config.tools || [];
     this.app = express();
+    
+    // Security headers
+    this.app.use((req, res, next) => {
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'DENY');
+      res.setHeader('X-XSS-Protection', '1; mode=block');
+      res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+      next();
+    });
+
     this.app.use(express.json());
     this.app.use(express.static(path.join(__dirname, '../public')));
   }
@@ -238,7 +248,25 @@ export class OpenClaw {
     };
 
     // ── AUTH ENDPOINTS ───────────────────────────────────────
+    const loginAttempts = new Map<string, { count: number, resetTime: number }>();
+    
     this.app.post('/api/auth/login', async (req, res) => {
+      const ip = req.ip || req.socket.remoteAddress || 'unknown';
+      const now = Date.now();
+      const attempt = loginAttempts.get(ip) || { count: 0, resetTime: now + 15 * 60 * 1000 };
+      
+      if (now > attempt.resetTime) {
+        attempt.count = 1;
+        attempt.resetTime = now + 15 * 60 * 1000;
+      } else {
+        attempt.count++;
+      }
+      loginAttempts.set(ip, attempt);
+
+      if (attempt.count > 10) {
+        return res.status(429).json({ error: 'Too many login attempts. Please try again after 15 minutes.' });
+      }
+
       const { email, password } = req.body;
       const cleanEmail = (email || '').trim().toLowerCase();
       const cleanPassword = (password || '').trim();
@@ -787,7 +815,7 @@ export class OpenClaw {
       const clientIp = getCleanClientIp(req);
       res.json({
         office_wifi_ip: config['office_wifi_ip'] || '',
-        office_wifi_name: config['office_wifi_name'] || 'AlliedOne Office Wi-Fi',
+        office_wifi_name: config['office_wifi_name'] || 'ERP-connect Office Wi-Fi',
         wifi_auto_attendance_enabled: config['wifi_auto_attendance_enabled'] !== 'false',
         auto_checkout_timeout_minutes: parseInt(config['auto_checkout_timeout_minutes'] || '40', 10),
         detected_client_ip: clientIp,
@@ -851,7 +879,7 @@ export class OpenClaw {
 
       res.json({
         client_ip: clientIp,
-        office_wifi_name: config['office_wifi_name'] || 'AlliedOne Office Wi-Fi',
+        office_wifi_name: config['office_wifi_name'] || 'ERP-connect Office Wi-Fi',
         is_office_wifi: isMatching,
         is_auto_enabled: isEnabled,
       });
@@ -1109,7 +1137,7 @@ export class OpenClaw {
 
       // Raw PS1 endpoint used by self-update
       if (os === 'ps1') {
-        const psScriptRaw = `# AlliedOne ERP - Automated Attendance Agent (self-updating)
+        const psScriptRaw = `# ERP-connect ERP - Automated Attendance Agent (self-updating)
 $serverUrl    = "${serverUrl}"
 $token        = "${scriptToken}"
 $employeeName = "${member.name}"
@@ -1131,7 +1159,7 @@ function Show-Toast($title, $msg) {
         [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
         $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
         $xml.LoadXml("<toast><visual><binding template='ToastGeneric'><text>$title</text><text>$msg</text></binding></visual></toast>")
-        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("AlliedOne ERP").Show([Windows.UI.Notifications.ToastNotification]::new($xml))
+        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("ERP-connect ERP").Show([Windows.UI.Notifications.ToastNotification]::new($xml))
     } catch {}
 }
 
@@ -1149,14 +1177,14 @@ for ($i = 0; $i -lt $maxRetries; $i++) {
     Start-Sleep -Seconds $retryDelay
 }
 if ($initResp -and $initResp.auto_checked_in) {
-    Show-Toast "AlliedOne ERP" "Good morning $employeeName! Automatically checked in."
+    Show-Toast "ERP-connect ERP" "Good morning $employeeName! Automatically checked in."
 }
 
 while ($true) {
     Start-Sleep -Seconds 60
     $resp = Send-Ping "PING"
     if ($resp -and $resp.auto_checked_in) {
-        Show-Toast "AlliedOne ERP" "Good morning $employeeName! Automatically checked in."
+        Show-Toast "ERP-connect ERP" "Good morning $employeeName! Automatically checked in."
     }
 }
 `;
@@ -1166,7 +1194,7 @@ while ($true) {
 
       if (os === 'windows' || os === 'bat') {
         // ── PowerShell background agent (self-updating) ──
-        const psScriptRaw = `# AlliedOne ERP - Automated Attendance Agent
+        const psScriptRaw = `# ERP-connect ERP - Automated Attendance Agent
 # Self-updating: fetches a fresh copy of this script on every startup.
 
 $serverUrl    = "${serverUrl}"
@@ -1190,7 +1218,7 @@ function Show-Toast($title, $msg) {
         [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime] | Out-Null
         $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
         $xml.LoadXml("<toast><visual><binding template='ToastGeneric'><text>$title</text><text>$msg</text></binding></visual></toast>")
-        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("AlliedOne ERP").Show(
+        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("ERP-connect ERP").Show(
             [Windows.UI.Notifications.ToastNotification]::new($xml)
         )
     } catch {}
@@ -1224,7 +1252,7 @@ for ($i = 0; $i -lt $maxRetries; $i++) {
     Start-Sleep -Seconds $retryDelay
 }
 if ($initResp -and $initResp.auto_checked_in) {
-    Show-Toast "AlliedOne ERP" "Good morning $employeeName! Automatically checked in."
+    Show-Toast "ERP-connect ERP" "Good morning $employeeName! Automatically checked in."
 }
 
 # Background presence loop (ping every 60 seconds)
@@ -1232,7 +1260,7 @@ while ($true) {
     Start-Sleep -Seconds 60
     $resp = Send-Ping "PING"
     if ($resp -and $resp.auto_checked_in) {
-        Show-Toast "AlliedOne ERP" "Good morning $employeeName! Automatically checked in."
+        Show-Toast "ERP-connect ERP" "Good morning $employeeName! Automatically checked in."
     }
 }
 `;
@@ -1241,24 +1269,24 @@ while ($true) {
 
         const psScriptBase64 = Buffer.from(psScriptRaw, 'utf8').toString('base64');
         const vbsScriptRaw = `Set WshShell = CreateObject("WScript.Shell")
-WshShell.Run "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File """ & CreateObject("WScript.Shell").ExpandEnvironmentStrings("%LOCALAPPDATA%") & "\\AlliedOneERP\\aol-attendance.ps1""", 0, False
+WshShell.Run "powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File """ & CreateObject("WScript.Shell").ExpandEnvironmentStrings("%LOCALAPPDATA%") & "\\ERP-connectERP\\aol-attendance.ps1""", 0, False
 `;
         const vbsScriptBase64 = Buffer.from(vbsScriptRaw, 'utf8').toString('base64');
 
         const batContent = `@echo off
-title AlliedOne ERP - Laptop Attendance Setup
+title ERP-connect ERP - Laptop Attendance Setup
 echo ==============================================================
-echo   AlliedOne ERP - Automated Laptop Attendance
+echo   ERP-connect ERP - Automated Laptop Attendance
 echo   Employee: ${member.name}
 echo   Server:   ${serverUrl}
 echo ==============================================================
 echo.
 
-set "TARGET_DIR=%LOCALAPPDATA%\\AlliedOneERP"
+set "TARGET_DIR=%LOCALAPPDATA%\\ERP-connectERP"
 if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
 
 set "PS_SCRIPT=%TARGET_DIR%\\aol-attendance.ps1"
-set "VBS_SCRIPT=%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\AlliedOneAttendance.vbs"
+set "VBS_SCRIPT=%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\ERP-connectAttendance.vbs"
 
 echo [1/3] Installing self-updating background agent...
 powershell -NoProfile -Command "$b64='${psScriptBase64}'; [System.IO.File]::WriteAllBytes('%PS_SCRIPT%', [System.Convert]::FromBase64String($b64))"
@@ -1279,14 +1307,14 @@ echo ==============================================================
 echo.
 pause
 `;
-        res.setHeader('Content-Disposition', `attachment; filename="AlliedOne-Attendance-${member.name.replace(/[^a-zA-Z0-9]/g, '_')}.bat"`);
+        res.setHeader('Content-Disposition', `attachment; filename="ERP-connect-Attendance-${member.name.replace(/[^a-zA-Z0-9]/g, '_')}.bat"`);
         res.setHeader('Content-Type', 'application/x-bat');
         return res.send(batContent);
 
       } else {
         // macOS / Linux
         const shContent = `#!/bin/bash
-# AlliedOne ERP - Zero-Browser Laptop Attendance (macOS/Linux)
+# ERP-connect ERP - Zero-Browser Laptop Attendance (macOS/Linux)
 # Self-updating agent for: ${member.name}
 
 SERVER_URL="${serverUrl}"
@@ -1295,7 +1323,7 @@ EMPLOYEE_NAME="${member.name}"
 HOSTNAME_VAL="$(hostname)"
 OS_NAME="$(uname -s)"
 
-AGENT_DIR="$HOME/.alliedone_erp"
+AGENT_DIR="$HOME/.erp-connect_erp"
 mkdir -p "$AGENT_DIR"
 SCRIPT_PATH="$AGENT_DIR/aol-attendance.sh"
 
@@ -1324,7 +1352,7 @@ trap 'send_ping "SHUTDOWN"' EXIT SIGTERM
 
 RESP=$(send_ping "PING")
 if echo "$RESP" | grep -q '"auto_checked_in":true'; then
-  command -v osascript >/dev/null 2>&1 && osascript -e 'display notification "Automatically checked in via Office Wi-Fi" with title "AlliedOne ERP"'
+  command -v osascript >/dev/null 2>&1 && osascript -e 'display notification "Automatically checked in via Office Wi-Fi" with title "ERP-connect ERP"'
 fi
 
 while true; do
@@ -1337,13 +1365,13 @@ chmod +x "$SCRIPT_PATH"
 
 # Register as login item (macOS)
 if [ "$(uname)" = "Darwin" ]; then
-  PLIST="$HOME/Library/LaunchAgents/com.alliedone.erp.plist"
+  PLIST="$HOME/Library/LaunchAgents/com.erp-connect.erp.plist"
   cat > "$PLIST" << PLIST_EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>Label</key><string>com.alliedone.erp</string>
+  <key>Label</key><string>com.erp-connect.erp</string>
   <key>ProgramArguments</key><array><string>$SCRIPT_PATH</string></array>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
@@ -1356,7 +1384,7 @@ fi
 nohup "$SCRIPT_PATH" > /dev/null 2>&1 &
 
 echo "======================================================"
-echo "  AlliedOne ERP Agent installed and running!"
+echo "  ERP-connect ERP Agent installed and running!"
 echo "  Employee: ${member.name}"
 echo "  Auto-updates on each startup. No reinstall needed!"
 echo "======================================================"
@@ -1365,7 +1393,7 @@ echo "======================================================"
           res.setHeader('Content-Type', 'text/plain');
           return res.send(shContent);
         }
-        res.setHeader('Content-Disposition', `attachment; filename="AlliedOne-Attendance-${member.name.replace(/[^a-zA-Z0-9]/g, '_')}.sh"`);
+        res.setHeader('Content-Disposition', `attachment; filename="ERP-connect-Attendance-${member.name.replace(/[^a-zA-Z0-9]/g, '_')}.sh"`);
         res.setHeader('Content-Type', 'text/x-shellscript');
         return res.send(shContent);
       }
@@ -2429,7 +2457,7 @@ echo "======================================================"
       if (!listen) return resolve();
       this.app.listen(port, () => {
         console.log('='.repeat(60));
-        console.log('ALLIEDONE ERP SYSTEM READY');
+        console.log('ERP-CONNECT ERP SYSTEM READY');
         console.log(`Dashboard  → http://localhost:${port}/dashboard.html`);
         console.log(`HR Page    → http://localhost:${port}/hr.html`);
         console.log(`Accounts   → http://localhost:${port}/accounts.html`);
