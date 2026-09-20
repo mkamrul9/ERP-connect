@@ -50,7 +50,7 @@ Built on a **Hybrid Headless Architecture**, a Next.js frontend communicates exc
 
 ERP-connect employs a dual-database architecture allowing zero-configuration local development alongside production-ready cloud deployments:
 
-- **Local Mode (Offline):** If no `DATABASE_URL` is provided, the backend falls back to `better-sqlite3` creating a local `./openclaw.db` file.
+- **Local Mode (Offline):** If no `DATABASE_URL` is provided, the backend falls back to `better-sqlite3` creating a local `./erp.db` file.
 - **Production Mode:** If a `DATABASE_URL` is detected (e.g., Neon PostgreSQL on Render), the backend seamlessly connects via `pg.Pool` utilizing the exact same query handlers.
 
 ---

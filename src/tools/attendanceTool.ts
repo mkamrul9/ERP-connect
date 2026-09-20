@@ -1,4 +1,4 @@
-import { Tool, dbRun } from '../openclaw-mock.js';
+import { Tool, dbRun } from '../erp-engine.js';
 
 export const logAttendanceTool = new Tool({
   name: 'log_attendance',

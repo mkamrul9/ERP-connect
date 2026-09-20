@@ -1,8 +1,8 @@
 node_modules/
 .next/
 .env
-openclaw.db
-openclaw.db-journal
+erp.db
+erp.db-journal
 .WWebJS/
 session/
 .DS_Store

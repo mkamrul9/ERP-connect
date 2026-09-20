@@ -446,7 +446,7 @@ export async function scheduleTender3And1DayReminders(params: {
 }
 
 /**
- * Process due email jobs from the database (Called in openclaw-mock cron loop)
+ * Process due email jobs from the database (Called in erp-engine cron loop)
  */
 export async function processDueEmailJobs() {
   try {

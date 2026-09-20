@@ -1,6 +1,6 @@
 import { BirdClient } from "@messagebird/sdk";
 
-// Use the exact API Key you put in your .env or openclaw-mock.ts
+// Use the exact API Key you put in your .env or erp-engine.ts
 const bird = new BirdClient({ apiKey: "bk_us1_FQ5jORJeB0W1MKpXUGBhm292XmDbD" });
 
 async function sendInitialMessage() {

@@ -54,7 +54,7 @@ Browser -> Port 3000
 
 | Environment | Database | How to trigger |
 |---|---|---|
-| **Local Development** | SQLite (`openclaw.db`) | `DATABASE_URL` not set or set to SQLite path |
+| **Local Development** | SQLite (`erp.db`) | `DATABASE_URL` not set or set to SQLite path |
 | **Cloud / Production** | PostgreSQL (Neon DB) | `DATABASE_URL` or `POSTGRES_URL` set to `postgres://...` |
 
 ### 1.3 User Roles
@@ -68,7 +68,7 @@ Browser -> Port 3000
 
 ## 2. Authentication & Authorization
 
-**File:** `app/login/page.tsx`, `src/openclaw-mock.ts`, `app/context/AuthContext.tsx`
+**File:** `app/login/page.tsx`, `src/erp-engine.ts`, `app/context/AuthContext.tsx`
 
 ### 2.1 Login Flow
 
@@ -579,7 +579,7 @@ Created automatically by the Cron Engine (see §12) for:
 
 ## 12. System: Background Services
 
-**File:** `src/openclaw-mock.ts`
+**File:** `src/erp-engine.ts`
 
 ### 12.1 Cron Engine
 

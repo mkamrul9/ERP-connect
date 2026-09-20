@@ -3,11 +3,11 @@ import { open } from 'sqlite';
 
 async function main() {
   const db = await open({
-    filename: './openclaw.db',
+    filename: './erp.db',
     driver: sqlite3.Database
   });
 
-  console.log("Connected to SQLite database (./openclaw.db).");
+  console.log("Connected to SQLite database (./erp.db).");
 
   const tables = [
     'members',

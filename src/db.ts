@@ -4,7 +4,7 @@
  * - When DATABASE_URL or POSTGRES_URL is configured (e.g., in Neon / Render),
  *   connects to PostgreSQL via pg.Pool with SSL.
  * - When DATABASE_URL is not set (e.g., local offline development),
- *   automatically falls back to local SQLite (./openclaw.db).
+ *   automatically falls back to local SQLite (./erp.db).
  * 
  * Provides unified helpers:
  *   - dbAll(sql, params): Returns Array of rows
@@ -273,10 +273,10 @@ export async function initDB() {
 
   } else {
     isPg = false;
-    console.log('[DB] No DATABASE_URL found. Falling back to local SQLite (./openclaw.db)...');
+    console.log('[DB] No DATABASE_URL found. Falling back to local SQLite (./erp.db)...');
 
     sqliteDb = await open({
-      filename: process.env.SQLITE_DB_PATH || './openclaw.db',
+      filename: process.env.SQLITE_DB_PATH || './erp.db',
       driver: sqlite3.Database,
     });
 

@@ -1,4 +1,4 @@
-import { OpenClaw, WhatsAppGateway } from './openclaw-mock.js';
+import { ERPEngine, WhatsAppGateway } from './erp-engine.js';
 import * as dotenv from 'dotenv';
 import { logAttendanceTool } from './tools/attendanceTool.js';
 
@@ -10,7 +10,7 @@ const whatsapp = new WhatsAppGateway({
   verifyToken: process.env.WHATSAPP_VERIFY_TOKEN!
 });
 
-const app = new OpenClaw({
+const app = new ERPEngine({
   databaseUrl: process.env.DATABASE_URL,
   modelProvider: process.env.MODEL_PROVIDER,
   gateways: [whatsapp],

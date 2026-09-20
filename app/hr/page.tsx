@@ -1783,84 +1783,86 @@ export default function HRPage() {
                 const list = Array.from(agg.values()).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
                 return (
-                  <div style={{ width: '100%', overflowX: 'hidden' }}>
-                    <table className="hr-compact-table" style={{ width: '100%', minWidth: '0px', maxWidth: '100%', fontSize: '.75rem', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
-                      <colgroup>
-                        <col style={{ width: '16%' }} />
-                        <col style={{ width: '32%' }} />
-                        <col style={{ width: '28%' }} />
-                        <col style={{ width: '24%' }} />
-                      </colgroup>
-                      <thead>
-                        <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                          <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Emp</th>
-                          <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Hours</th>
-                          <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Day</th>
-                          <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Leave</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {list.length === 0 ? (
-                          <tr className="empty-r"><td colSpan={4}>No records for this date.</td></tr>
-                        ) : (
-                          list.slice((currentPageAtt - 1) * 10, currentPageAtt * 10).map((l, idx) => {
-                            const stats = monthlyStats.get(l.member_id) || { daysPresent: 0, totalHours: 0 };
-                            const leaveCount = monthLeaveCounts.get(l.member_id) || 0;
-                            return (
-                              <tr key={idx}>
-                                {/* Emp Initials Avatar */}
-                                <td style={{ padding: '6px 2px', textAlign: 'center' }}>
-                                  <div
-                                    style={{
-                                      background: l.color || 'var(--primary)',
-                                      width: '26px',
-                                      height: '26px',
-                                      borderRadius: '6px',
-                                      display: 'inline-flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      fontSize: '.7rem',
-                                      fontWeight: 700,
-                                      color: '#fff',
-                                      letterSpacing: '0.5px',
-                                      boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                                      cursor: 'default',
-                                    }}
-                                    title={l.name}
-                                  >
-                                    {getInitials(l.name)}
-                                  </div>
-                                </td>
-                                {/* Hours: cumulative worked / elapsed required (5h/day) */}
-                                <td style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.72rem', whiteSpace: 'nowrap' }}>
-                                  <span style={{ fontWeight: 700, color: 'var(--text)' }}>
-                                    {fmtHoursMinutes(stats.totalHours)}
-                                  </span>
-                                  <span style={{ color: 'var(--muted)', fontSize: '.64rem' }}>/{fmtHoursMinutes(elapsedRequiredHours)}</span>
-                                </td>
-                                {/* Day: cumulative present / elapsed working days */}
-                                <td style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.72rem', whiteSpace: 'nowrap' }}>
-                                  <span style={{ fontWeight: 700, color: 'var(--text)' }}>
-                                    {stats.daysPresent}
-                                  </span>
-                                  <span style={{ color: 'var(--muted)', fontSize: '.64rem' }}>/{elapsedWorkingDays}</span>
-                                </td>
-                                {/* Leave: monthly approved leave day count */}
-                                <td style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.72rem' }}>
-                                  {leaveCount > 0 ? (
-                                    <span style={{ fontWeight: 700, color: '#2979FF' }}>{leaveCount}</span>
-                                  ) : (
-                                    <span style={{ color: 'var(--muted)' }}>—</span>
-                                  )}
-                                </td>
-                              </tr>
-                            );
-                          })
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                  <Pagination currentPage={currentPageAtt} totalItems={list.length} itemsPerPage={10} onPageChange={setCurrentPageAtt} />
+                  <>
+                    <div style={{ width: '100%', overflowX: 'hidden' }}>
+                      <table className="hr-compact-table" style={{ width: '100%', minWidth: '0px', maxWidth: '100%', fontSize: '.75rem', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+                        <colgroup>
+                          <col style={{ width: '16%' }} />
+                          <col style={{ width: '32%' }} />
+                          <col style={{ width: '28%' }} />
+                          <col style={{ width: '24%' }} />
+                        </colgroup>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                            <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Emp</th>
+                            <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Hours</th>
+                            <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Day</th>
+                            <th style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase' }}>Leave</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {list.length === 0 ? (
+                            <tr className="empty-r"><td colSpan={4}>No records for this date.</td></tr>
+                          ) : (
+                            list.slice((currentPageAtt - 1) * 10, currentPageAtt * 10).map((l, idx) => {
+                              const stats = monthlyStats.get(l.member_id) || { daysPresent: 0, totalHours: 0 };
+                              const leaveCount = monthLeaveCounts.get(l.member_id) || 0;
+                              return (
+                                <tr key={idx}>
+                                  {/* Emp Initials Avatar */}
+                                  <td style={{ padding: '6px 2px', textAlign: 'center' }}>
+                                    <div
+                                      style={{
+                                        background: l.color || 'var(--primary)',
+                                        width: '26px',
+                                        height: '26px',
+                                        borderRadius: '6px',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '.7rem',
+                                        fontWeight: 700,
+                                        color: '#fff',
+                                        letterSpacing: '0.5px',
+                                        boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                                        cursor: 'default',
+                                      }}
+                                      title={l.name}
+                                    >
+                                      {getInitials(l.name)}
+                                    </div>
+                                  </td>
+                                  {/* Hours: cumulative worked / elapsed required (5h/day) */}
+                                  <td style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.72rem', whiteSpace: 'nowrap' }}>
+                                    <span style={{ fontWeight: 700, color: 'var(--text)' }}>
+                                      {fmtHoursMinutes(stats.totalHours)}
+                                    </span>
+                                    <span style={{ color: 'var(--muted)', fontSize: '.64rem' }}>/{fmtHoursMinutes(elapsedRequiredHours)}</span>
+                                  </td>
+                                  {/* Day: cumulative present / elapsed working days */}
+                                  <td style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.72rem', whiteSpace: 'nowrap' }}>
+                                    <span style={{ fontWeight: 700, color: 'var(--text)' }}>
+                                      {stats.daysPresent}
+                                    </span>
+                                    <span style={{ color: 'var(--muted)', fontSize: '.64rem' }}>/{elapsedWorkingDays}</span>
+                                  </td>
+                                  {/* Leave: monthly approved leave day count */}
+                                  <td style={{ padding: '6px 2px', textAlign: 'center', fontSize: '.72rem' }}>
+                                    {leaveCount > 0 ? (
+                                      <span style={{ fontWeight: 700, color: '#2979FF' }}>{leaveCount}</span>
+                                    ) : (
+                                      <span style={{ color: 'var(--muted)' }}>—</span>
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                    <Pagination currentPage={currentPageAtt} totalItems={list.length} itemsPerPage={10} onPageChange={setCurrentPageAtt} />
+                  </>
                 );
               })()}
             </div>

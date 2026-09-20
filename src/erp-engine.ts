@@ -148,7 +148,7 @@ export function parseDbDate(raw: string | Date): Date {
 export class WhatsAppGateway { config: any; constructor(c: any) { this.config = c; } }
 export class Tool { config: any; constructor(c: any) { this.config = c; } }
 
-export class OpenClaw {
+export class ERPEngine {
   config: any; systemPrompt = ''; app: express.Application; tools: Tool[];
   constructor(config: any) {
     this.config = config; this.tools = config.tools || [];

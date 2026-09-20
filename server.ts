@@ -6,7 +6,7 @@
  * Next.js for the frontend. This architecture is designed to be highly 
  * scalable and acts as a headless CMS/API for the upcoming Mobile App.
  *
- * It initializes the OpenClaw (Mock AI engine for now), Database connection, 
+ * It initializes the ERPEngine (Mock AI engine for now), Database connection, 
  * and handles WhatsApp gateway configurations.
  */
 import 'dotenv/config';
@@ -14,7 +14,7 @@ import express from 'express';
 import next from 'next';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { OpenClaw, WhatsAppGateway } from './src/openclaw-mock.js';
+import { ERPEngine, WhatsAppGateway } from './src/erp-engine.js';
 import { logAttendanceTool } from './src/tools/attendanceTool.js';
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -28,14 +28,14 @@ async function start() {
   // 1. Prepare Next.js
   await nextApp.prepare();
 
-  // 2. Initialize the OpenClaw / Express App
+  // 2. Initialize the ERPEngine / Express App
   const whatsapp = new WhatsAppGateway({
     phoneNumberId: process.env.WHATSAPP_PHONE_ID!,
     accessToken: process.env.WHATSAPP_TOKEN!,
     verifyToken: process.env.WHATSAPP_VERIFY_TOKEN!
   });
 
-  const bot = new OpenClaw({
+  const bot = new ERPEngine({
     databaseUrl: process.env.DATABASE_URL,
     modelProvider: process.env.MODEL_PROVIDER,
     gateways: [whatsapp],
