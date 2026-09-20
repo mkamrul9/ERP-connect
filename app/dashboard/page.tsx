@@ -117,7 +117,7 @@ function DeadlineEditor({ defaultValue, onSave }: { defaultValue: string; onSave
       onBlur={e => onSave(e.target.value)}
       onChange={e => onSave(e.target.value)}
       onClick={e => { try { (e.target as HTMLInputElement).showPicker?.(); } catch (err) {} }}
-      style={{ background: '#131722', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', colorScheme: 'dark', cursor: 'pointer', width: '100%', minWidth: '160px' }}
+      style={{ background: 'var(--surface)', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', colorScheme: 'light dark', cursor: 'pointer', width: '100%', minWidth: '160px' }}
     />
   );
 }
@@ -151,9 +151,9 @@ function toLocalInput(iso?: string) {
   }
 }
 
-const WHITE = '#ffffff';
+const WHITE = 'var(--text)';
 const MUTED_LABEL = 'rgba(255,255,255,0.55)';
-const BLUE = '#4f7eff';
+const BLUE = 'var(--primary)';
 const BLUE_BG = 'rgba(79,126,255,0.15)';
 const BLUE_GRAD = 'linear-gradient(135deg, #4f7eff, #6c4fe3)';
 
@@ -165,7 +165,7 @@ function CompactMobileTaskCard({ task, onClick }: { task: any; onClick: () => vo
         display: 'flex',
         alignItems: 'center',
         gap: 12,
-        background: '#161926',
+        background: 'var(--card)',
         border: '1px solid #2a3050',
         borderRadius: '12px',
         padding: '13px 16px',
@@ -175,7 +175,7 @@ function CompactMobileTaskCard({ task, onClick }: { task: any; onClick: () => vo
         userSelect: 'none'
       }}
       onMouseOver={e => { e.currentTarget.style.borderColor = '#4f7eff'; e.currentTarget.style.background = 'rgba(79,126,255,0.04)'; }}
-      onMouseOut={e => { e.currentTarget.style.borderColor = '#2a3050'; e.currentTarget.style.background = '#161926'; }}
+      onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--card)'; }}
     >
       <div
         style={{
@@ -221,7 +221,7 @@ const BLANK_ROW = {
 
 /* ─── Shared inline field styles (tenders-matching) ─── */
 const fieldInputSt: React.CSSProperties = {
-  background: '#131722', border: '1px solid #2a3050', borderRadius: 7,
+  background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: 7,
   color: WHITE, fontSize: '0.78rem', padding: '6px 9px',
   width: '100%', outline: 'none', fontFamily: 'inherit'
 };
@@ -250,7 +250,7 @@ function ReminderBoxes({
         <input type="number" min={0} placeholder={ph} value={val} onChange={e => onChange(field, e.target.value)}
           style={{ ...fieldEditSt, textAlign: 'center', padding: '5px 6px' }} />
       ) : (
-        <div style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: 7, padding: '5px 6px', textAlign: 'center', color: WHITE, fontWeight: 600, fontSize: '0.8rem' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: 7, padding: '5px 6px', textAlign: 'center', color: WHITE, fontWeight: 600, fontSize: '0.8rem' }}>
           {val || '—'}
         </div>
       )}
@@ -277,8 +277,8 @@ function MobileAddSheet({ newRow, setNewRow, members, onSubmit, saving, onClose 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 800, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center' }}>
       <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(4px)' }} />
-      <div style={{ position: 'relative', background: '#161926', borderRadius: '18px 18px 0 0', border: '1px solid #2a3050', borderBottom: 'none', padding: '12px 16px 16px', paddingBottom: 'max(14px, env(safe-area-inset-bottom))', width: '100%', maxWidth: 560, maxHeight: '100dvh', overflow: 'hidden' }}>
-        <div style={{ width: 36, height: 3, background: '#2a3050', borderRadius: 2, margin: '0 auto 10px' }} />
+      <div style={{ position: 'relative', background: 'var(--card)', borderRadius: '18px 18px 0 0', border: '1px solid #2a3050', borderBottom: 'none', padding: '12px 16px 16px', paddingBottom: 'max(14px, env(safe-area-inset-bottom))', width: '100%', maxWidth: 560, maxHeight: '100dvh', overflow: 'hidden' }}>
+        <div style={{ width: 36, height: 3, background: 'var(--border)', borderRadius: 2, margin: '0 auto 10px' }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
           <h3 style={{ fontSize: '0.9rem', fontWeight: 700, color: WHITE, margin: 0 }}>Add Task</h3>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: WHITE, cursor: 'pointer', padding: 4, opacity: 0.7 }}><X size={18} /></button>
@@ -320,7 +320,7 @@ function MobileAddSheet({ newRow, setNewRow, members, onSubmit, saving, onClose 
             <input type="datetime-local" value={newRow.deadline}
               onClick={e => { try { (e.target as HTMLInputElement).showPicker?.(); } catch {} }}
               onChange={e => set('deadline', e.target.value)}
-              style={{ ...fieldEditSt, colorScheme: 'dark' }} />
+              style={{ ...fieldEditSt, colorScheme: 'light dark' }} />
           </div>
           <ReminderBoxes
             days={newRow.reminder_days || ''} hours={newRow.reminder_hours || ''} minutes={newRow.reminder_minutes || ''}
@@ -609,7 +609,7 @@ export default function DashboardPage() {
         <select autoFocus defaultValue={task.action_type}
           onBlur={e => saveCell(task.id, 'action_type', e.target.value)}
           onChange={e => saveCell(task.id, 'action_type', e.target.value)}
-          style={{ background: '#131722', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', minWidth: '120px' }}>
+          style={{ background: 'var(--surface)', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', minWidth: '120px' }}>
           <option value="" disabled>Select</option>
           {ACTION_KEYS.map(k => <option key={k} value={k}>{getActionMeta(k).label}</option>)}
         </select>
@@ -630,7 +630,7 @@ export default function DashboardPage() {
         <input autoFocus type="text" defaultValue={task.recipient || ''} placeholder="Enter recipient/contact..."
           onBlur={e => saveCell(task.id, 'recipient', e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') saveCell(task.id, 'recipient', (e.target as HTMLInputElement).value); }}
-          style={{ background: '#131722', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.82rem', padding: '6px 10px', width: '100%', minWidth: '140px', outline: 'none', fontFamily: 'inherit' }} />
+          style={{ background: 'var(--surface)', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.82rem', padding: '6px 10px', width: '100%', minWidth: '140px', outline: 'none', fontFamily: 'inherit' }} />
       );
       return (
         <div onClick={() => setEditCell({ id: task.id, field })}
@@ -646,7 +646,7 @@ export default function DashboardPage() {
         <select autoFocus defaultValue={task.assigned_to?.toString() || ''}
           onBlur={e => saveCell(task.id, 'assigned_to', e.target.value)}
           onChange={e => saveCell(task.id, 'assigned_to', e.target.value)}
-          style={{ background: '#131722', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', minWidth: '150px' }}>
+          style={{ background: 'var(--surface)', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', minWidth: '150px' }}>
           <option value="">Unassigned</option>
           {[...members].sort((a, b) => a.name.localeCompare(b.name)).map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
         </select>
@@ -673,7 +673,7 @@ export default function DashboardPage() {
         <select autoFocus defaultValue={task.status === 'DUE' ? 'WIP' : task.status}
           onBlur={e => saveCell(task.id, 'status', e.target.value)}
           onChange={e => saveCell(task.id, 'status', e.target.value)}
-          style={{ background: '#131722', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', minWidth: '120px' }}>
+          style={{ background: 'var(--surface)', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', padding: '6px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', minWidth: '120px' }}>
           <option value="DONE">Done</option>
           <option value="WIP">WIP</option>
           <option value="PENDING">Pending</option>
@@ -712,7 +712,7 @@ export default function DashboardPage() {
         <input autoFocus type="text" defaultValue={task.title}
           onBlur={e => saveCell(task.id, 'title', e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter') saveCell(task.id, 'title', (e.target as HTMLInputElement).value); }}
-          style={{ background: '#131722', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.84rem', padding: '6px 10px', width: '100%', minWidth: '180px', outline: 'none', fontFamily: 'inherit' }} />
+          style={{ background: 'var(--surface)', border: '1px solid #4f7eff', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.84rem', padding: '6px 10px', width: '100%', minWidth: '180px', outline: 'none', fontFamily: 'inherit' }} />
       );
       return (
         <div onClick={() => setEditCell({ id: task.id, field })}
@@ -753,7 +753,7 @@ export default function DashboardPage() {
       <Topbar title="Daily Tasks">
         {/* Desktop only: date nav lives in the topbar */}
         <div className="dash-topbar-desktop" style={{ marginRight: 'auto', marginLeft: 20, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'nowrap' }}>
-          <div className="dnav" style={{ background: '#161926', border: '1px solid #2a3050', borderRadius: '9px', display: 'flex', alignItems: 'center' }}>
+          <div className="dnav" style={{ background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '9px', display: 'flex', alignItems: 'center' }}>
             <button onClick={() => shiftDate(-1)} title="Previous Day" style={{ padding: '8px 14px', color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer' }}><ChevronLeft size={18} /></button>
             <label style={{ position: 'relative', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, minWidth: 210, padding: '8px 16px', userSelect: 'none', color: isToday ? '#38bdf8' : '#f1f5f9', fontWeight: 600, fontSize: '0.88rem' }}>
               <Calendar size={15} style={{ color: isToday ? '#38bdf8' : '#94a3b8', flexShrink: 0 }} />
@@ -769,7 +769,7 @@ export default function DashboardPage() {
             onClick={() => { setShowArchived(true); fetchArchivedTasks(); }}
             style={{ background: 'transparent', border: '1px solid #2a3050', borderRadius: '8px', color: '#94a3b8', padding: '8px 14px', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, transition: 'all 0.15s', flexShrink: 0 }}
             onMouseOver={e => { e.currentTarget.style.color = '#f1f5f9'; e.currentTarget.style.borderColor = '#4f7eff'; }}
-            onMouseOut={e => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = '#2a3050'; }}
+            onMouseOut={e => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = 'var(--border)'; }}
             title="View archived tasks">
             <Archive size={15} />
             <span>Archived Tasks</span>
@@ -782,7 +782,7 @@ export default function DashboardPage() {
         {/* ── Mobile-only: compact date nav sub-bar (replaces topbar controls) ── */}
         <div className="dash-mobile-datebar" style={{ display: 'none', marginBottom: 12, gap: 8, alignItems: 'center' }}>
           {/* Date nav pill */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', background: '#161926', border: '1px solid #2a3050', borderRadius: '10px', overflow: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '10px', overflow: 'hidden' }}>
             <button onClick={() => shiftDate(-1)}
               style={{ padding: '10px 14px', color: '#94a3b8', background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0 }}>
               <ChevronLeft size={18} />
@@ -806,7 +806,7 @@ export default function DashboardPage() {
           {isAdmin && (
           <button
             onClick={() => { setShowArchived(true); fetchArchivedTasks(); }}
-            style={{ background: '#161926', border: '1px solid #2a3050', borderRadius: '10px', color: '#94a3b8', padding: '10px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+            style={{ background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '10px', color: '#94a3b8', padding: '10px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
             title="View archived tasks">
             <Archive size={17} />
           </button>
@@ -837,7 +837,7 @@ export default function DashboardPage() {
               {/* Desktop view switcher toggle */}
               {!isMobile && (
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
-                  <div style={{ display: 'inline-flex', background: '#161926', border: '1px solid #2a3050', borderRadius: 8, padding: 3, gap: 4 }}>
+                  <div style={{ display: 'inline-flex', background: 'var(--card)', border: '1px solid #2a3050', borderRadius: 8, padding: 3, gap: 4 }}>
                     <button
                       type="button"
                       onClick={() => setViewLayout('cards')}
@@ -887,7 +887,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 /* Desktop Table View */
-                <div className="card" style={{ background: '#161926', border: '1px solid #2a3050', borderRadius: '12px', overflow: 'hidden' }}>
+                <div className="card" style={{ background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '12px', overflow: 'hidden' }}>
                   <div className="table-scroll">
                     <table style={{ width: '100%', minWidth: '920px', borderCollapse: 'collapse' }}>
                       <thead>
@@ -931,7 +931,7 @@ export default function DashboardPage() {
                         <tr style={{ background: 'rgba(79,126,255,0.06)', borderTop: '2px solid rgba(79,126,255,0.2)' }}>
                           <td style={{ padding: '12px 16px' }}>
                             <select value={newRow.assigned_to} onChange={e => setNewRow({ ...newRow, assigned_to: e.target.value })}
-                              style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', width: '100%', minWidth: '140px' }}>
+                              style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', width: '100%', minWidth: '140px' }}>
                               <option value="">Select assignee...</option>
                               {[...members].sort((a,b) => a.name.localeCompare(b.name)).map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                             </select>
@@ -940,11 +940,11 @@ export default function DashboardPage() {
                             <input type="text" placeholder="+ New activity name..." value={newRow.title}
                               onChange={e => setNewRow({ ...newRow, title: e.target.value })}
                               onKeyDown={e => { if (e.key === 'Enter') submitNewRow(); }}
-                              style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.84rem', padding: '8px 12px', width: '100%', minWidth: '180px', outline: 'none', fontFamily: 'inherit' }} />
+                              style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.84rem', padding: '8px 12px', width: '100%', minWidth: '180px', outline: 'none', fontFamily: 'inherit' }} />
                           </td>
                           <td style={{ padding: '12px 16px' }}>
                             <select value={newRow.action_type} onChange={e => setNewRow({ ...newRow, action_type: e.target.value })}
-                              style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', width: '100%', minWidth: '110px' }}>
+                              style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', width: '100%', minWidth: '110px' }}>
                               <option value="" disabled>Select</option>
                               {ACTION_KEYS.map(k => <option key={k} value={k}>{getActionMeta(k).label}</option>)}
                             </select>
@@ -953,7 +953,7 @@ export default function DashboardPage() {
                             <input type="text" placeholder="Recipient / Contact..." value={newRow.recipient}
                               onChange={e => setNewRow({ ...newRow, recipient: e.target.value })}
                               onKeyDown={e => { if (e.key === 'Enter') submitNewRow(); }}
-                              style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.82rem', padding: '8px 12px', width: '100%', minWidth: '140px', outline: 'none', fontFamily: 'inherit' }} />
+                              style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', fontSize: '0.82rem', padding: '8px 12px', width: '100%', minWidth: '140px', outline: 'none', fontFamily: 'inherit' }} />
                           </td>
                           <td style={{ padding: '12px 16px' }}>
                             <input
@@ -966,7 +966,7 @@ export default function DashboardPage() {
                               }}
                               onChange={e => setNewRow({ ...newRow, deadline: e.target.value })}
                               style={{
-                                background: '#131722',
+                                background: 'var(--surface)',
                                 border: '1px solid #2a3050',
                                 borderRadius: '7px',
                                 color: '#f1f5f9',
@@ -976,14 +976,14 @@ export default function DashboardPage() {
                                 outline: 'none',
                                 width: '100%',
                                 minWidth: '160px',
-                                colorScheme: 'dark',
+                                colorScheme: 'light dark',
                                 cursor: 'pointer'
                               }}
                             />
                           </td>
                           <td style={{ padding: '12px 16px' }}>
                             <select value={newRow.status} onChange={e => setNewRow({ ...newRow, status: e.target.value as any })}
-                              style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', width: '100%', minWidth: '110px' }}>
+                              style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', width: '100%', minWidth: '110px' }}>
                               <option value="DONE">Done</option>
                               <option value="WIP">WIP</option>
                               <option value="PENDING">Pending</option>
@@ -1025,21 +1025,21 @@ export default function DashboardPage() {
             <>
               {/* Filter bar — admin only (employees see no filters) */}
               {isAdmin && (
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20, background: '#161926', border: '1px solid #2a3050', borderRadius: '12px', padding: '12px 14px', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20, background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '12px', padding: '12px 14px', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Filters:</span>
                 <select value={fAssignee} onChange={e => setFAssignee(e.target.value)}
-                  style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: fAssignee ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', flex: 1, minWidth: '120px' }}>
+                  style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: fAssignee ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', flex: 1, minWidth: '120px' }}>
                   <option value="">All Assignees</option>
                   <option value="unassigned">Unassigned</option>
                   {members.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                 </select>
                 <select value={fAction} onChange={e => setFAction(e.target.value)}
-                  style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: fAction ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', flex: 1, minWidth: '100px' }}>
+                  style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: fAction ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', flex: 1, minWidth: '100px' }}>
                   <option value="">All Actions</option>
                   {ACTION_KEYS.map(k => <option key={k} value={k}>{getActionMeta(k).label}</option>)}
                 </select>
                 <select value={fStatus} onChange={e => setFStatus(e.target.value)}
-                  style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: fStatus ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', flex: 1, minWidth: '100px' }}>
+                  style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: fStatus ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', flex: 1, minWidth: '100px' }}>
                   <option value="">All Statuses</option>
                   <option value="DONE">Done</option>
                   <option value="WIP">WIP</option>
@@ -1048,7 +1048,7 @@ export default function DashboardPage() {
                 <input type="date" value={fDeadline}
                   onClick={e => { try { (e.target as HTMLInputElement).showPicker?.(); } catch (err) {} }}
                   onChange={e => setFDeadline(e.target.value)}
-                  style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '7px', color: fDeadline ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', colorScheme: 'dark', cursor: 'pointer', flex: 1, minWidth: '120px' }} />
+                  style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '7px', color: fDeadline ? '#38bdf8' : '#f1f5f9', padding: '8px 10px', fontSize: '0.82rem', fontFamily: 'inherit', outline: 'none', colorScheme: 'light dark', cursor: 'pointer', flex: 1, minWidth: '120px' }} />
                 {(fAssignee || fAction || fStatus || fDeadline) && (
                   <button onClick={() => { setFAssignee(''); setFAction(''); setFStatus(''); setFDeadline(''); }}
                     style={{ background: 'transparent', border: '1px solid #334155', borderRadius: '7px', color: '#94a3b8', padding: '8px 12px', fontSize: '0.8rem', cursor: 'pointer', fontFamily: 'inherit', marginLeft: 'auto' }}>
@@ -1078,7 +1078,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 /* Team table */
-                <div className="card" style={{ background: '#161926', border: '1px solid #2a3050', borderRadius: '12px', overflow: 'hidden' }}>
+                <div className="card" style={{ background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '12px', overflow: 'hidden' }}>
                   <div className="table-scroll">
                     <table style={{ width: '100%', minWidth: '880px', borderCollapse: 'collapse' }}>
                       <thead>
@@ -1150,7 +1150,7 @@ export default function DashboardPage() {
           <div className="dash-summary" style={{
             display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'space-around' : 'flex-start',
             gap: isMobile ? 8 : 36, marginTop: 20,
-            padding: '16px 24px', background: '#161926', border: '1px solid #2a3050', borderRadius: '12px', flexWrap: 'wrap'
+            padding: '16px 24px', background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '12px', flexWrap: 'wrap'
           }}>
             {/* DONE - GREEN */}
             <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 7 : 12, flex: isMobile ? '1 1 auto' : 'none', justifyContent: 'center' }}>
@@ -1159,7 +1159,7 @@ export default function DashboardPage() {
               <span style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', fontWeight: 800, color: '#22c55e' }}>{done}</span>
             </div>
 
-            <span className="dash-sum-sep" style={{ color: '#2a3050', fontSize: '1.2rem' }}>|</span>
+            <span className="dash-sum-sep" style={{ color: 'var(--border)', fontSize: '1.2rem' }}>|</span>
 
             {/* WIP - YELLOW */}
             <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 7 : 12, flex: isMobile ? '1 1 auto' : 'none', justifyContent: 'center' }}>
@@ -1168,7 +1168,7 @@ export default function DashboardPage() {
               <span style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', fontWeight: 800, color: '#eab308' }}>{wip}</span>
             </div>
 
-            <span className="dash-sum-sep" style={{ color: '#2a3050', fontSize: '1.2rem' }}>|</span>
+            <span className="dash-sum-sep" style={{ color: 'var(--border)', fontSize: '1.2rem' }}>|</span>
 
             {/* PENDING - RED */}
             <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 7 : 12, flex: isMobile ? '1 1 auto' : 'none', justifyContent: 'center' }}>
@@ -1247,7 +1247,7 @@ export default function DashboardPage() {
         return (
           <div style={{ position: 'fixed', inset: 0, zIndex: 99999, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}
             onClick={closeDetail}>
-            <div style={{ background: '#161926', borderTop: '1px solid #2a3050', borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: '14px 16px 16px', paddingBottom: 'max(14px, env(safe-area-inset-bottom))', position: 'relative', display: 'flex', flexDirection: 'column', maxHeight: '100dvh', overflow: 'hidden' }}
+            <div style={{ background: 'var(--card)', borderTop: '1px solid #2a3050', borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: '14px 16px 16px', paddingBottom: 'max(14px, env(safe-area-inset-bottom))', position: 'relative', display: 'flex', flexDirection: 'column', maxHeight: '100dvh', overflow: 'hidden' }}
               onClick={e => e.stopPropagation()}>
 
               <div style={{ position: 'absolute', top: 10, right: 12, display: 'flex', gap: 8, zIndex: 2 }}>
@@ -1337,7 +1337,7 @@ export default function DashboardPage() {
                     <input type="datetime-local" value={deadlineLocal}
                       onClick={e => { try { (e.target as HTMLInputElement).showPicker?.(); } catch {} }}
                       onChange={e => handleDraftChange('deadline', e.target.value)}
-                      style={{ ...fieldEditSt, colorScheme: 'dark' }} />
+                      style={{ ...fieldEditSt, colorScheme: 'light dark' }} />
                   ) : (
                     <div style={valueSt}>
                       {activeTask.deadline
@@ -1359,7 +1359,7 @@ export default function DashboardPage() {
               {mobileEditMode && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
                   <button type="button" onClick={() => { setMobileDraft(activeTask); setMobileEditMode(false); }}
-                    style={{ padding: '10px', borderRadius: 9, border: '1px solid #2a3050', background: '#131722', color: WHITE, fontSize: '0.84rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+                    style={{ padding: '10px', borderRadius: 9, border: '1px solid #2a3050', background: 'var(--surface)', color: WHITE, fontSize: '0.84rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                     Cancel
                   </button>
                   <button type="button" onClick={saveMobileDraft}
@@ -1399,7 +1399,7 @@ export default function DashboardPage() {
       {taskToDelete && (
         <div className="veil on" onClick={e => { if (e.target === e.currentTarget) setTaskToDelete(null); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(5px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 16 }}>
-          <div style={{ background: '#161926', border: '1px solid #2a3050', borderRadius: '14px', width: '100%', maxWidth: '480px', padding: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '14px', width: '100%', maxWidth: '480px', padding: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -1415,7 +1415,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Task summary card */}
-            <div style={{ background: '#131722', border: '1px solid #2a3050', borderRadius: '10px', padding: '14px 16px', marginBottom: 20 }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '10px', padding: '14px 16px', marginBottom: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                 {(() => {
                   const am = getActionMeta(taskToDelete.action_type);
@@ -1471,7 +1471,7 @@ export default function DashboardPage() {
       {showArchived && (
         <div className="veil on" onClick={e => { if (e.target === e.currentTarget) setShowArchived(false); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(5px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 16 }}>
-          <div style={{ background: '#161926', border: '1px solid #2a3050', borderRadius: '14px', width: '100%', maxWidth: '640px', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}>
+          <div style={{ background: 'var(--card)', border: '1px solid #2a3050', borderRadius: '14px', width: '100%', maxWidth: '640px', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -1499,7 +1499,7 @@ export default function DashboardPage() {
                   {archivedTasks.map(t => {
                     const am = getActionMeta(t.action_type);
                     return (
-                      <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#131722', border: '1px solid #2a3050', borderRadius: '9px', padding: '12px 16px', gap: 12, flexWrap: 'wrap' }}>
+                      <div key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--surface)', border: '1px solid #2a3050', borderRadius: '9px', padding: '12px 16px', gap: 12, flexWrap: 'wrap' }}>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#e2e8f0', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', fontWeight: 600, fontSize: '0.72rem', padding: '2px 7px', borderRadius: '4px' }}>
