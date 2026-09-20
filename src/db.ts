@@ -456,14 +456,14 @@ export async function initDB() {
   }
 
   // Seed default admin and employee accounts
-  const adminHash    = await bcrypt.hash('Admin@123', 10);
-  const employeeHash = await bcrypt.hash('Employee@123', 10);
+  const adminHash    = await bcrypt.hash('admin123', 10);
+  const employeeHash = await bcrypt.hash('emp123', 10);
 
   const defaultAccounts = [
-    { name: 'Jane Doe Admin', email: 'admin@erp-connect.com', role: 'Admin', color: '#ff4d4f', hash: adminHash, notify_email: 'jane@example.com' },
-    { name: 'Jane Doe', email: 'janedoe@erp-connect.com', role: 'Employee', color: '#ff7a45', hash: employeeHash, notify_email: 'jane@example.com' },
-    { name: 'John Smith', email: 'smith@erp-connect.com', role: 'Employee', color: '#4f7eff', hash: employeeHash, notify_email: 'john@example.com' },
-    { name: 'Alex Johnson', email: 'orko@erp-connect.com', role: 'Employee', color: '#26c486', hash: employeeHash, notify_email: 'alex@example.com' },
+    { name: 'Demo Admin', email: 'admin@erp.com', role: 'Admin', color: '#000000', hash: adminHash, notify_email: '' },
+    { name: 'Demo Employee', email: 'employee@erp.com', role: 'Employee', color: '#22c55e', hash: employeeHash, notify_email: '' },
+    { name: 'John Smith', email: 'smith@erp.com', role: 'Employee', color: '#4f7eff', hash: employeeHash, notify_email: '' },
+    { name: 'Alex Johnson', email: 'orko@erp.com', role: 'Employee', color: '#26c486', hash: employeeHash, notify_email: '' },
     { name: 'Sam Wilson', email: 'kamrul@erp-connect.com', role: 'Employee', color: '#f5a623', hash: employeeHash, notify_email: '' },
   ];
 
@@ -481,12 +481,6 @@ export async function initDB() {
       );
     }
   }
-
-  // Ensure admin@ stays Admin labeled distinctly from employee Jane Doe
-  try {
-    await dbRun(`UPDATE members SET role = 'Admin', name = 'Jane Doe Admin' WHERE LOWER(TRIM(email)) = 'admin@erp-connect.com'`);
-    await dbRun(`UPDATE members SET role = 'Employee', name = 'Jane Doe' WHERE LOWER(TRIM(email)) = 'janedoe@erp-connect.com'`);
-  } catch (e) {}
 
   // Seed default settings if missing
   const settingsRows = await dbAll('SELECT key FROM settings') as any[];

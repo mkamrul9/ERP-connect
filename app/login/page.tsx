@@ -163,6 +163,22 @@ export default function LoginPage() {
             <p style={{ margin: "8px 0 0", color: "var(--muted)", fontSize: "0.88rem" }}>
               Sign in to your ERP-connect account
             </p>
+            
+            {/* Demo Credentials Box */}
+            <div style={{
+              marginTop: 20,
+              padding: "12px 16px",
+              background: "var(--primary-dim)",
+              borderRadius: 10,
+              border: "1px solid var(--border)",
+              textAlign: "left",
+              fontSize: "0.8rem",
+              color: "var(--text-sec)"
+            }}>
+              <div style={{ fontWeight: 700, color: "var(--primary)", marginBottom: 6, fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>Demo Credentials</div>
+              <div style={{ marginBottom: 4 }}><strong>Admin:</strong> admin@erp.com / admin123</div>
+              <div><strong>Employee:</strong> employee@erp.com / emp123</div>
+            </div>
           </div>
 
           {/* Error */}
