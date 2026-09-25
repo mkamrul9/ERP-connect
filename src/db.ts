@@ -15,6 +15,9 @@ import pg from 'pg';
 import sqlite3 from 'sqlite3';
 import { open, Database as SQLiteDatabase } from 'sqlite';
 import bcrypt from 'bcryptjs';
+import { AsyncLocalStorage } from 'async_hooks';
+
+export const tenantStorage = new AsyncLocalStorage<number>();
 
 const { Pool } = pg;
 
@@ -522,8 +525,61 @@ export async function initDB() {
   console.log(`[DB] Database ready (Engine: ${isPg ? 'Neon PostgreSQL' : 'Local SQLite'}).`);
 }
 
-export const dbAll = async (sql: string, p: any[] = []): Promise<any[]> => {
-  const cleanParams = sanitizeParams(p);
+function injectTenant(originalSql: string, originalParams: any[]): { sql: string; params: any[] } {
+  const tId = tenantStorage.getStore();
+  if (!tId || originalSql.toLowerCase().includes('tenant_id') || originalSql.toLowerCase().includes('tenants')) {
+    return { sql: originalSql, params: originalParams };
+  }
+
+  let sql = originalSql;
+  let params = [...originalParams];
+
+  if (/^\s*SELECT\b/i.test(sql)) {
+    if (/\bWHERE\b/i.test(sql)) {
+      sql = sql.replace(/\bWHERE\b/i, 'WHERE tenant_id = ? AND');
+      params.unshift(tId);
+    } else {
+      const match = sql.match(/\b(ORDER BY|GROUP BY|LIMIT)\b/i);
+      if (match) {
+        sql = sql.replace(match[0], `WHERE tenant_id = ? ${match[0]}`);
+        const beforeMatch = sql.substring(0, sql.search(/\b(ORDER BY|GROUP BY|LIMIT)\b/i));
+        const qCount = (beforeMatch.match(/\?/g) || []).length;
+        params.splice(qCount, 0, tId);
+      } else {
+        sql = `${sql} WHERE tenant_id = ?`;
+        params.push(tId);
+      }
+    }
+  } else if (/^\s*UPDATE\b/i.test(sql)) {
+    if (/\bWHERE\b/i.test(sql)) {
+      const beforeWhere = sql.substring(0, sql.search(/\bWHERE\b/i));
+      const qCount = (beforeWhere.match(/\?/g) || []).length;
+      sql = sql.replace(/\bWHERE\b/i, 'WHERE tenant_id = ? AND');
+      params.splice(qCount, 0, tId);
+    } else {
+      sql = `${sql} WHERE tenant_id = ?`;
+      params.push(tId);
+    }
+  } else if (/^\s*DELETE\b/i.test(sql)) {
+    if (/\bWHERE\b/i.test(sql)) {
+      sql = sql.replace(/\bWHERE\b/i, 'WHERE tenant_id = ? AND');
+      params.unshift(tId);
+    } else {
+      sql = `${sql} WHERE tenant_id = ?`;
+      params.push(tId);
+    }
+  } else if (/^\s*INSERT\b/i.test(sql)) {
+    sql = sql.replace(/\((.*?)\)/, '(tenant_id, $1)');
+    sql = sql.replace(/VALUES\s*\((.*?)\)/i, 'VALUES (?, $1)');
+    params.unshift(tId);
+  }
+  
+  return { sql, params };
+}
+
+export const dbAll = async (rawSql: string, rawParams: any[] = []): Promise<any[]> => {
+  const { sql, params } = injectTenant(rawSql, rawParams);
+  const cleanParams = sanitizeParams(params);
   if (isPg && pgPool) {
     const res = await pgPool.query(formatPgQuery(sql), cleanParams);
     return res.rows;
@@ -534,8 +590,9 @@ export const dbAll = async (sql: string, p: any[] = []): Promise<any[]> => {
   return [];
 };
 
-export const dbGet = async (sql: string, p: any[] = []): Promise<any> => {
-  const cleanParams = sanitizeParams(p);
+export const dbGet = async (rawSql: string, rawParams: any[] = []): Promise<any> => {
+  const { sql, params } = injectTenant(rawSql, rawParams);
+  const cleanParams = sanitizeParams(params);
   if (isPg && pgPool) {
     const res = await pgPool.query(formatPgQuery(sql), cleanParams);
     return res.rows[0] || null;
@@ -546,8 +603,9 @@ export const dbGet = async (sql: string, p: any[] = []): Promise<any> => {
   return null;
 };
 
-export const dbRun = async (sql: string, p: any[] = []): Promise<{ lastID: number; rowCount?: number }> => {
-  const cleanParams = sanitizeParams(p);
+export const dbRun = async (rawSql: string, rawParams: any[] = []): Promise<{ lastID: number; rowCount?: number }> => {
+  const { sql, params } = injectTenant(rawSql, rawParams);
+  const cleanParams = sanitizeParams(params);
   if (isPg && pgPool) {
     let finalSql = formatPgQuery(sql);
     const isInsert = /^\s*INSERT\s+INTO/i.test(finalSql);

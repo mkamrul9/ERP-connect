@@ -2,20 +2,16 @@
  * server.ts
  * 
  * Core hybrid server for ERP-connect ERP.
- * This server runs Express for the backend (API & AI integration) and
+ * This server runs Express for the backend (API) and
  * Next.js for the frontend. This architecture is designed to be highly 
  * scalable and acts as a headless CMS/API for the upcoming Mobile App.
- *
- * It initializes the ERPEngine (Mock AI engine for now), Database connection, 
- * and handles WhatsApp gateway configurations.
  */
 import 'dotenv/config';
 import express from 'express';
 import next from 'next';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import { ERPEngine, WhatsAppGateway } from './src/erp-engine.js';
-import { logAttendanceTool } from './src/tools/attendanceTool.js';
+import { createBackendApp } from './src/backend.js';
 
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
@@ -28,39 +24,13 @@ async function start() {
   // 1. Prepare Next.js
   await nextApp.prepare();
 
-  // 2. Initialize the ERPEngine / Express App
-  const whatsapp = new WhatsAppGateway({
-    phoneNumberId: process.env.WHATSAPP_PHONE_ID!,
-    accessToken: process.env.WHATSAPP_TOKEN!,
-    verifyToken: process.env.WHATSAPP_VERIFY_TOKEN!
-  });
-
-  const bot = new ERPEngine({
-    databaseUrl: process.env.DATABASE_URL,
-    modelProvider: process.env.MODEL_PROVIDER,
-    gateways: [whatsapp],
-    tools: [logAttendanceTool]
-  });
-
-  bot.setSystemPrompt(`
-    You are the internal ERP assistant for ERP-connect.
-    When a user messages you to check in or check out of the office:
-    1. Identify their intent (IN or OUT).
-    2. Use the 'log_attendance' tool.
-    3. Extract the user's phone number from the message metadata/context.
-    4. Confirm to the user that their attendance was recorded.
-  `);
+  // 2. Initialize the Backend Express App
+  const app = await createBackendApp();
 
   const port = parseInt(process.env.PORT || '3000', 10);
 
-  // Start the bot which initializes the Express app and DB
-  await bot.start(port, false); // Pass false to prevent it from listening yet
-
-  const app = bot.app;
-
   // Let Next.js handle all other routes (like /, /dashboard, /hr)
   app.use((req, res, next) => {
-    console.log('Next.js intercepting:', req.url);
     handle(req, res).catch(next);
   });
 

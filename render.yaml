@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: erp-connect
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    plan: free
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      # Use the persistent disk for SQLite database so data is saved across deployments
+      - key: SQLITE_DB_PATH
+        value: /data/erp.db
+      
+      # Optional: You can override these later in the Render dashboard if you set up actual integrations
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true

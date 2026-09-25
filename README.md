@@ -5,70 +5,92 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs&logoColor=white" alt="Next.js">
+  <img src="https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs&logoColor=white" alt="Next.js">
   <img src="https://img.shields.io/badge/Express-5-blue?logo=express&logoColor=white" alt="Express">
-  <img src="https://img.shields.io/badge/TypeScript-7-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Database-SQLite%20%2F%20PostgreSQL-003B57?logo=sqlite&logoColor=white" alt="Database">
   <img src="https://img.shields.io/badge/Node.js-%3E%3D20.0.0-339933?logo=nodedotjs&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Status-In%20Development-orange" alt="Status">
+  <img src="https://img.shields.io/badge/Notifications-Email%20Only%20(Brevo)-7952B3" alt="Email">
 </p>
 
 ---
 
 ## Overview
 
-**ERP-connect** is an enterprise-grade, internal operations platform designed to eliminate the need for disjointed external tools (like Power BI, Zapier, and spreadsheets). It provides a unified, role-based web interface featuring native Business Intelligence dashboards, a completely integrated Workflow Automation rules engine, and extensive modules for HR, attendance, finances, and client management.
+**ERP-connect** is a modern, enterprise-grade internal operations platform built as a multi-tenant SaaS ERP for small and medium businesses. It eliminates the need for disjointed external tools by providing a unified, role-based web application for HR, attendance, finance, tender management, client management, and more.
 
-Built on a **Hybrid Headless Architecture**, a Next.js frontend communicates exclusively with an Express/TypeScript backend via REST APIs. This ensures the same data layer can power mobile applications in a future phase without any backend rewrites.
+Built on a **Hybrid Headless Architecture**: a Next.js frontend communicates exclusively with an Express/TypeScript backend via REST APIs. The same data layer can power future mobile applications without any backend rewrites.
+
+> **Notification Channel**: Email only, via [Brevo](https://www.brevo.com/). No Telegram or WhatsApp integrations.
 
 ---
 
 ## Table of Contents
 
-- [Features](#features)
+- [Modules](#modules)
 - [Architecture](#architecture)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
 - [Project Structure](#project-structure)
+- [Deployment (Render)](#deployment-render)
 
 ---
 
-## Features
+## Modules
 
-| Module | Capabilities |
+| Module | Description |
 |---|---|
-| **Native Analytics BI** | Replaces Power BI. Fully interactive P&L flow charts, top expenses tracking, productivity analytics, and deadline trend mapping powered natively via `recharts`. |
-| **Workflow Automations** | Replaces Zapier. Custom event triggers ("If THIS then THAT") capable of auto-assigning tasks, sending email notifications, and tracking system logs entirely on the backend. |
-| **Daily Tasks Dashboard** | Real-time task tracking with traffic-light priority system (Red / Orange / Green), deadline management, auto-status calculations, and mobile-responsive layout. |
-| **HR & Attendance** | 1-click Check-In / Check-Out, monthly attendance reports, late arrival detection, and leave request management with admin approval workflows. |
-| **CRM & Inventory** | Initial foundations deployed for enterprise Client Tracking and Asset Management (Hardware/Software licenses). |
-| **In-App Notifications** | Real-time notification center with interactive navigation to requests, instant read-marking, and database persistence. |
+| **Daily Tasks Dashboard** | Task tracking with priority system (Red / Orange / Green), deadline management, auto-status calculations, and assignee-based filtering. |
+| **HR & Attendance** | 1-click Check-In / Check-Out, monthly attendance calendar, late arrival detection, leave request management with Admin approval flow, and auto Wi-Fi / laptop attendance. |
+| **Accounts & Expenses** | Full expense tracking with category budgets, monthly P&L summaries, top spending heads, and payment method tracking. |
+| **Tender Management** | Track government and private tenders with deadline reminders, status pipeline (UPCOMING → SUBMITTED → WON/LOST), and document links. |
+| **Meetings & Contacts** | Schedule and manage external meetings with configurable email reminders (days / hours / minutes before). |
+| **Credentials Vault** | Securely store software licenses, API keys, and service credentials with expiry-based email reminders. |
+| **CRM** | Client relationship tracking, pipeline management, and contact history. |
+| **Inventory** | Asset and resource tracking for hardware and software. |
+| **Workflow Automations** | Custom trigger-action rules that automate tasks, send notifications, and log system events. |
+| **In-App Notifications** | Real-time notification bell with unread badge, navigation links, and admin-scoped alerts. |
 
 ---
 
 ## Architecture
 
-ERP-connect employs a dual-database architecture allowing zero-configuration local development alongside production-ready cloud deployments:
+### Dual-Database Mode
 
-- **Local Mode (Offline):** If no `DATABASE_URL` is provided, the backend falls back to `better-sqlite3` creating a local `./erp.db` file.
-- **Production Mode:** If a `DATABASE_URL` is detected (e.g., Neon PostgreSQL on Render), the backend seamlessly connects via `pg.Pool` utilizing the exact same query handlers.
+ERP-connect auto-selects the database at startup based on environment variables:
+
+| Mode | Trigger | Database |
+|---|---|---|
+| **Local / Dev** | `DATABASE_URL` not set | SQLite (`erp.db` or `SQLITE_DB_PATH`) |
+| **Production** | `DATABASE_URL` is set | PostgreSQL (via `pg.Pool`) |
+
+The same query helpers (`dbAll`, `dbGet`, `dbRun`) transparently wrap both drivers.
+
+### Email Reminders
+
+All notifications are sent via the **Brevo Transactional Email API**. Reminder scheduling supports:
+- **24h & 15h before deadline** — automatic for tasks and leaves with deadlines.
+- **Custom offsets** — configurable in days, hours, and minutes on each entity.
+- **Cron engine** — runs every 60 seconds inside the Express server to evaluate and fire due reminders.
 
 ---
 
 ## Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 16 (App Router + Client Components)
+- **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
-- **Styling**: Enterprise Blue Custom CSS Variables (Zero Tailwind for fine-grained DOM control)
+- **Styling**: Custom CSS Variables — Slate/Blue enterprise palette (no Tailwind)
 - **Icons**: Lucide React
-- **Data Visualization**: Recharts
+- **Charts**: Recharts
 
 ### Backend
-- **Server**: Express 5.0 (Running concurrently on `tsx`)
+- **Server**: Express 5
 - **Language**: TypeScript
-- **Database**: SQLite (Local) / PostgreSQL (Production)
-- **Authentication**: JWT & `bcryptjs`
+- **Database**: SQLite (local) / PostgreSQL (production)
+- **Authentication**: JWT (`jsonwebtoken`) + `bcryptjs`
+- **Email**: Brevo Transactional API
 
 ---
 
@@ -76,42 +98,99 @@ ERP-connect employs a dual-database architecture allowing zero-configuration loc
 
 ### Prerequisites
 - **Node.js**: v20.0.0 or higher
-- **npm** or **yarn**
+- **npm**
 
 ### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/mkamrul9/ERP-connect.git
-   cd ERP-connect
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
 
-### Populating Dummy Data (For Local Demo)
-To see the Analytics and Dashboards fully populated with realistic data:
+```bash
+git clone https://github.com/mkamrul9/ERP-connect.git
+cd ERP-connect
+npm install
+```
+
+### Seed Demo Data
+
+Populate the database with realistic demo records for all modules:
+
 ```bash
 node scripts/seed_dummy_data.cjs
 ```
 
-### Running the Application
-To start the Next.js frontend and Express backend concurrently:
+### Run the App
+
 ```bash
 npm run dev
 ```
-The application will be available at `http://localhost:3000`.
+
+The application starts at `http://localhost:3000`.
+
+**Default login credentials:**
+- **Admin**: `admin@erp.com` / `admin123`
+- **Employee**: `employee@erp.com` / `emp123`
+
+---
+
+## Environment Variables
+
+Only **two variables** are required for a minimal production deployment. Everything else has safe defaults.
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `DATABASE_URL` | Optional | *(SQLite)* | PostgreSQL connection string. If absent, SQLite is used. |
+| `JWT_SECRET` | Recommended | *(built-in fallback)* | JWT signing secret. Set a strong custom value in production. |
+| `BREVO_API_KEY` | Optional | *(set via UI)* | Brevo API key for email notifications. Can also be set from the Admin Settings page without a restart. |
+| `SQLITE_DB_PATH` | Optional | `./erp.db` | Custom path for the SQLite database file (e.g. `/data/erp.db` on Render persistent disk). |
+| `PORT` | Optional | `3000` | HTTP port for the server. |
+
+> **No Telegram or WhatsApp credentials are needed or used.**
 
 ---
 
 ## Project Structure
 
-- `/app` - Next.js App Router (Frontend Pages & Routing)
-- `/src` - Express Backend (Controllers, DB, Auth middleware)
-- `/public` - Static assets (Images, Manifests, PWA Icons)
-- `/scripts` - Utilities for database upgrades and dummy data seeding
-- `server.ts` - Entry point for the Express backend
+```
+ERP-connect/
+├── app/                    # Next.js App Router (frontend pages & components)
+│   ├── components/         # Shared UI components (Sidebar, Topbar)
+│   ├── dashboard/          # Daily Tasks Dashboard
+│   ├── hr/                 # HR & Attendance
+│   ├── accounts/           # Expenses & Finance
+│   ├── tenders/            # Tender Management
+│   ├── meetings/           # Meetings & Contacts
+│   ├── credentials/        # Credentials Vault
+│   ├── crm/                # CRM
+│   ├── inventory/          # Inventory
+│   └── globals.css         # Global design system (CSS variables)
+├── src/
+│   ├── backend.ts          # Express API server (all routes, auth, cron)
+│   ├── brevo.ts            # Brevo email client & reminder scheduler
+│   └── db.ts               # Database abstraction (SQLite + PostgreSQL)
+├── scripts/
+│   ├── seed_dummy_data.cjs # Demo data seeder
+│   └── seed_credentials.cjs# Credentials demo data seeder
+├── public/                 # Static assets (icons, manifests)
+├── server.ts               # App entry point (Next.js + Express hybrid)
+├── render.yaml             # Render deployment configuration
+└── package.json
+```
 
 ---
 
-> **Note**: This system is designed exclusively for internal organizational usage. All mock data generated by the seed script is fictional and for demonstration purposes only.
+## Deployment (Render)
+
+The repository includes a `render.yaml` for one-click deployment on [Render](https://render.com/).
+
+**Minimum environment variables to set on Render:**
+
+```
+JWT_SECRET=<your-strong-secret>
+SQLITE_DB_PATH=/data/erp.db
+```
+
+A persistent disk is mounted at `/data` (configured in `render.yaml`) to preserve the SQLite database across deploys.
+
+After the first deploy, navigate to **Admin → Settings → Email** in the application UI to enter your Brevo API key — no redeploy required.
+
+---
+
+> ERP-connect is designed for internal organisational use. All demo data generated by the seed script is fictional.

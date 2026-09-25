@@ -65,7 +65,6 @@ type Task = {
   task_date: string;
   deadline?: string;
   is_archived?: number;
-  notify_telegram?: number;
   notify_email?: number;
   reminder_days?: number | null;
   reminder_hours?: number | null;
@@ -212,7 +211,6 @@ const BLANK_ROW = {
   assigned_to: '',
   status: 'PENDING',
   deadline: '',
-  notify_telegram: 0,
   notify_email: 0,
   reminder_days: '',
   reminder_hours: '',
@@ -545,7 +543,6 @@ export default function DashboardPage() {
           reminder_days: remDays === '' ? null : Number(remDays),
           reminder_hours: remHours === '' ? null : Number(remHours),
           reminder_minutes: remMins === '' ? null : Number(remMins),
-          notify_telegram: hasReminder ? 1 : ((newRow as any).notify_telegram || 0),
           notify_email: 1, // always on — email fires whenever a task is assigned
         }),
       });
@@ -557,26 +554,6 @@ export default function DashboardPage() {
       showToast('Failed to add task.');
     } finally {
       setSavingNew(false);
-    }
-  };
-
-  /* ─── Toggle Telegram Notification for Task ──────── */
-  const toggleTelegramNotification = async (task: Task) => {
-    const nextVal = task.notify_telegram ? 0 : 1;
-    try {
-      const res = await fetch(`/api/tasks/${task.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notify_telegram: nextVal }),
-      });
-      if (res.ok) {
-        showToast(nextVal ? '🔔 Telegram alert enabled for this task' : '🔕 Telegram alert disabled');
-        fetchTasks();
-      } else {
-        showToast('Failed to update task');
-      }
-    } catch {
-      showToast('Cannot reach server');
     }
   };
 
@@ -777,7 +754,52 @@ export default function DashboardPage() {
         </div>
       </Topbar>
 
-      <div className="scroll" style={{ padding: isMobile ? '12px 14px 90px' : '24px' }}>
+      <div className="scroll" style={{ padding: isMobile ? '12px 14px 90px' : '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+        {/* Hero Section */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 8px 0' }}>Welcome back, {user?.name?.split(' ')[0] || 'User'}!</h1>
+              <p style={{ color: 'var(--muted)', margin: 0, fontSize: '0.95rem' }}>Here's what's happening today.</p>
+            </div>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              {isAdmin && (
+                <button className="btn btn-primary" style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '10px 16px', borderRadius: '8px' }} onClick={() => setShowMobileAdd(true)}>
+                  <Plus size={16} /> Add Task
+                </button>
+              )}
+              <button className="btn btn-sec" style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '10px 16px', borderRadius: '8px' }}>
+                <Plus size={16} /> Log Expense
+              </button>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+            <div className="stat-card">
+              <div className="stat-card-title">Today's Tasks</div>
+              <div className="stat-card-value">{tasks.length}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card-title">Pending Leaves</div>
+              <div className="stat-card-value">2</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card-title">Open Tenders</div>
+              <div className="stat-card-value">5</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-card-title">Monthly Spend</div>
+              <div className="stat-card-value">$12.4k</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dashboard Main Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: '24px', alignItems: 'start' }}>
+          
+          {/* Left Column (Task Board) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
         {/* ── Mobile-only: compact date nav sub-bar (replaces topbar controls) ── */}
         <div className="dash-mobile-datebar" style={{ display: 'none', marginBottom: 12, gap: 8, alignItems: 'center' }}>
@@ -1178,6 +1200,44 @@ export default function DashboardPage() {
             </div>
           </div>
         )}
+        </div>
+
+        {/* Right Column (Activity Feed) */}
+        {!isMobile && (
+          <div style={{ background: 'var(--card)', borderRadius: '12px', border: '1px solid var(--border)', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: 'var(--text)', margin: 0, paddingBottom: '12px', borderBottom: '1px solid var(--border)' }}>Activity Feed</h3>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', marginTop: '6px', flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontSize: '0.88rem', color: 'var(--text)', fontWeight: 500 }}>New Task Assigned</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>System update for server maintenance.</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>10 mins ago</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', marginTop: '6px', flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontSize: '0.88rem', color: 'var(--text)', fontWeight: 500 }}>Tender Approved</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>Project X tender was approved.</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>2 hours ago</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', marginTop: '6px', flexShrink: 0 }} />
+                <div>
+                  <div style={{ fontSize: '0.88rem', color: 'var(--text)', fontWeight: 500 }}>Leave Request</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>Jane Doe requested 2 days off.</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Yesterday</div>
+                </div>
+              </div>
+            </div>
+            <button className="btn btn-sec" style={{ marginTop: '8px', width: '100%', padding: '8px', borderRadius: '8px', fontSize: '0.85rem' }}>View All Activity</button>
+          </div>
+        )}
+        
+        </div>
       </div>
 
       {/* ── Mobile Details Modal (tenders-matching) ── */}
@@ -1217,7 +1277,6 @@ export default function DashboardPage() {
               reminder_hours: dHours === '' ? null : Number(dHours),
               reminder_minutes: dMins === '' ? null : Number(dMins),
               notify_email: hasReminder ? 1 : 0,
-              notify_telegram: hasReminder ? 1 : 0,
             } : canChangeStatus ? {
               status: mobileDraft.status ?? activeTask.status,
             } : {};

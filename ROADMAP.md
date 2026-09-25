@@ -12,8 +12,7 @@
 | **Database** | SQLite (dev) → PostgreSQL (prod) | Zero setup locally, scales to production |
 | **Web Dashboard** | Next.js 14 (App Router) | SSR + real-time, best for dashboards |
 | **Mobile App** | React Native (Expo) | One codebase for iOS + Android |
-| **WhatsApp** | Meta Cloud API (Official) | Required for production; use local UI for demos |
-| **Notifications** | Nodemailer (Email) + WhatsApp API | Covers Requirement #1 & #2 reminders |
+| **Notifications** | Nodemailer (Email) + Email API | Covers Requirement #1 & #2 reminders |
 | **Auth** | NextAuth.js (Role-based: Admin / Employee) | Secure, simple to set up |
 | **Hosting** | Vercel (Web) + Railway (API/DB) | Free tier, instant deploys |
 
@@ -104,10 +103,10 @@ leave_requests (
 )
 ```
 **Features:**
-- [ ] Employee submits leave request via dashboard or WhatsApp chat
-- [ ] Admin gets notification (Email + WhatsApp) of pending requests
+- [ ] Employee submits leave request via dashboard or Email chat
+- [ ] Admin gets notification (Email) of pending requests
 - [ ] Admin can Approve / Reject with one click from dashboard
-- [ ] Employee gets WhatsApp notification of decision
+- [ ] Employee gets Email notification of decision
 - [ ] Leave balance tracker per employee
 
 ---
@@ -171,7 +170,7 @@ password_reminders (
 ### 4.2 Automated Reminder Engine
 - [ ] **Cron Job** runs daily at 9:00 AM
 - [ ] Sends Email notification for assets expiring in 30, 7, and 1 day(s)
-- [ ] Sends WhatsApp message for expiring assets (when Meta API is live)
+- [ ] Sends Email message for expiring assets (when Meta API is live)
 - [ ] **Password Change Reminders:** If `last_changed_date + interval_months = today` then send reminder
 - [ ] Promotional offer notes visible on asset detail page
 
@@ -196,7 +195,7 @@ tenders (
 - [ ] Countdown timer showing days until submission deadline
 - [ ] Status pipeline: Upcoming → In Progress → Submitted → Won/Lost
 - [ ] Dashboard sorted by submission deadline (most urgent first)
-- [ ] 7-day, 3-day, and 1-day reminder notifications (Email + WhatsApp)
+- [ ] 7-day, 3-day, and 1-day reminder notifications (Email)
 - [ ] Filter by: Status, Type (Govt/Private), Assigned Person
 
 ---
@@ -214,7 +213,7 @@ scheduled_calls (
   status ENUM('PENDING','DONE','MISSED'), notes
 )
 inbound_queries (
-  id, source ENUM('WEBSITE','FACEBOOK','LINKEDIN','WHATSAPP'),
+  id, source ENUM('WEBSITE','FACEBOOK','LINKEDIN','EMAIL'),
   sender_name, query_text, received_at,
   status ENUM('UNREAD','IN_PROGRESS','REPLIED'),
   replied_by, replied_at
@@ -279,10 +278,6 @@ This is where the system gets truly intelligent. All previous phases collected s
 | `schedule_call` | Add a call to the tracker | Phase 6 |
 | `get_it_asset_status` | Check expiry dates of IT assets | Phase 4 |
 
-### 8.3 WhatsApp Integration (Meta Cloud API)
-- [ ] Apply for Meta Business API (requires registered business)
-- [ ] Connect official WhatsApp webhook to AI Router
-- [ ] Employees can now use WhatsApp to do everything: log attendance, submit leave, ask questions
 
 ---
 
@@ -327,7 +322,6 @@ This is where the system gets truly intelligent. All previous phases collected s
 | **5** | Tender Management | #4 | Week 5-6 |
 | **6** | Calls & Reply Tracker | #5 | Week 6-7 |
 | **7** | Product Roadmap Module | #8 | Week 7-8 |
-| **8** | Real AI (OpenAI GPT-4o) + WhatsApp | All | Week 8-9 |
 | **9** | Mobile App (React Native) | All | Week 10-12 |
 | **10** | Production Deployment | All | Week 12-13 |
 

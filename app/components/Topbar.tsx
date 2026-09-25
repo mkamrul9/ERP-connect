@@ -7,7 +7,7 @@
  * Includes a dark/light theme toggle.
  */
 'use client';
-import { Menu, Bell, Sun, Moon } from 'lucide-react';
+import { Menu, Bell, Sun, Moon, Search, X } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -34,6 +34,8 @@ export default function Topbar({ title, children }: { title?: string, children?:
   
   const [notifications, setNotifications] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [bellRect, setBellRect] = useState<{ top: number; right: number } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
@@ -71,10 +73,21 @@ export default function Topbar({ title, children }: { title?: string, children?:
         setShowDropdown(false);
       }
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(v => !v);
+      }
+      if (e.key === 'Escape') {
+        setShowSearch(false);
+      }
+    };
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       clearInterval(interval);
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [user]);
 
@@ -155,18 +168,39 @@ export default function Topbar({ title, children }: { title?: string, children?:
     }
   }, [unreadCount]);
 
+  const initials = user?.name
+    ? user.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+    : '?';
+
   return (
     <>
       <div className="overlay-side" id="side-overlay" onClick={closeSide}></div>
       <div className="top">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '25%' }}>
           <button className="hamburger" onClick={openSide}>
             <Menu size={20} />
           </button>
           <span className="top-title">{displayTitle}</span>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        {/* Global Search */}
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '0 20px' }}>
+          <button 
+            onClick={() => setShowSearch(true)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              background: 'var(--primary-dim)', border: '1px solid var(--border)',
+              borderRadius: 'var(--radius)', padding: '8px 16px',
+              color: 'var(--muted)', fontSize: '0.85rem', width: '100%', maxWidth: '400px',
+              cursor: 'pointer', transition: 'all 0.2s'
+            }}
+          >
+            <Search size={16} />
+            <span>Search anywhere... (Ctrl+K)</span>
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '25%', justifyContent: 'flex-end', flexShrink: 0 }}>
           {children}
 
           {/* Theme Toggle */}
@@ -243,8 +277,37 @@ export default function Topbar({ title, children }: { title?: string, children?:
               </div>
             )}
           </div>
+
+          {/* User Avatar */}
+          {user && (
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--primary)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }} title={user.name}>
+              {initials}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Search Overlay Modal */}
+      {showSearch && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: '10vh' }} onClick={() => setShowSearch(false)}>
+          <div style={{ width: '100%', maxWidth: '600px', background: 'var(--card)', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ padding: '16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Search size={20} color="var(--muted)" />
+              <input 
+                autoFocus
+                placeholder="Search Tasks, Tenders, HR..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'var(--text)', fontSize: '1.1rem' }}
+              />
+              <button onClick={() => setShowSearch(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}><X size={20} /></button>
+            </div>
+            <div style={{ padding: '24px', textAlign: 'center', color: 'var(--muted)', fontSize: '0.9rem' }}>
+              {searchQuery ? `Searching for "${searchQuery}"... (Mock)` : 'Start typing to search across all modules...'}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
