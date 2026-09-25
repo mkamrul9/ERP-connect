@@ -1,14 +1,42 @@
+# Dependencies
 node_modules/
+scratch_ts/
+
+# Build output
 .next/
+tsconfig.tsbuildinfo
+
+# Environment & secrets
 .env
+CREDENTIALS.md
+
+# Database (local dev only — production uses persistent disk)
 erp.db
 erp.db-journal
-.WWebJS/
-session/
-.DS_Store
+erp.db-shm
+erp.db-wal
 
-# PWA files
+# PWA generated files
 public/sw.js
 public/sw.js.map
 public/workbox-*.js
-CREDENTIALS.md
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# WhatsApp session (legacy, no longer used)
+.WWebJS/
+.wwebjs_cache/
+session/
+
+# One-off dev/patch scripts (keep in local, not in repo)
+clean_legacy.cjs
+fix_sqlite.cjs
+manual_patch.cjs
+modify.cjs
+patch.py
+search_lines.cjs
+test_regex.cjs
+update.cjs
